@@ -29,6 +29,8 @@ public:
 	double getBalance()const;
 	void setBalance(double sum);
 	int getAccountNumber()const;
+	unsigned getUCN()const;
+	unsigned getAge()const;
 
 	/*void deposit(double amount) {
 		balance += amount;

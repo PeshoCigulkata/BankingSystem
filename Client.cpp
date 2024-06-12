@@ -1,4 +1,37 @@
 #include "Client.h"
+#include "String.h"
+
+unsigned getNumberLength(unsigned  n)
+{
+
+	if (n == 0)
+		return 1;
+	unsigned int res = 0;
+
+	while (n != 0)
+	{
+		res++;
+		n /= 10;
+	}
+	return res;
+}
+
+char getCharFromDigit(int digit)
+{
+	if (digit < 0 || digit > 9)
+		return '\0';
+
+	return digit + '0';
+}
+
+String toString(unsigned number, String str) {
+	unsigned length = getNumberLength(number);
+	for (int i = length - 1; i >= 0; i--) {
+		str += getCharFromDigit(number % 10);
+	}
+
+	return str;
+}
 
 
 Client::Client() :Account(UserRoles::Client) {}
@@ -7,14 +40,25 @@ void Client::check_avl()const {
 	std::cout << getBalance();
 }
 
-void Client::open()const {
-	//v main moje da se razpishe logikata!
-	//samiqt  bank koito sme suzdali prosto uvelichavame size++ i pravim nov akaunt
+void Client::open(Bank& bank) {
+	int acc_num = bank.create_account(getOwner(), getRole(), getUCN(), getAge());
+	String str;
+	Message message("Opened account number: " + getOwner() + toString(getUCN(), str) + toString(getAge(), str));
+	bank.addMessage(message);
+	messages.push_back(message);
 }
 
-void Client::close()const {
-	//v main moje da se razpishe logikata!
-	//samiqt  bank koito sme suzdali prosto uvelichavame size-- i triem akaunt
+void Client::close(Bank& bank, int account_number) {
+	if (bank.close_account(account_number)) {  //It means such account exists! The operation to close the account has succeeded.
+		String str;
+		Message message("Closed account number: " + toString(account_number,str));
+		Message forClientMessage("You have closed an account! ");
+		messages.push_back(forClientMessage);
+		bank.addMessage(message);
+	}
+	else {
+		throw std::runtime_error("This account doesnt exist! ");
+	}
 }
 
 void Client::redeem(Bank& other, int verificationNum) {

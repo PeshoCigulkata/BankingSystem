@@ -59,30 +59,43 @@ void Bank::resize() {
 	accounts = new_accounts;
 }
 
-int Bank::create_account(String owner, UserRoles role,unsigned UCN,unsigned age) {
+int Bank::create_account(String owner, UserRoles role, unsigned UCN, unsigned age) {
 	if (size >= capacity) {
 		resize();
 	}
 	int account_number = size + 1;
-	accounts[size++] = new Account(account_number,UCN,age, owner);
+	accounts[size++] = new Account(account_number, UCN, age, owner);
 	//opravi v zavisimost ot rolqta!
 	return account_number;
 }
 
-Bank::Bank(): name("Unnamed"), size(0), capacity(10) {
+Bank::Bank() : name("Unnamed"), size(0), capacity(10) {
 	accounts = new Account * [capacity] {nullptr};
 	for (unsigned i = 0; i < 1024; ++i) {
 		CheckSums[i] = 0;
 	}
 }
 
-void Bank::close_account(int account_number) {
+bool Bank::close_account(int account_number) {
 	for (unsigned i = 0; i < size; ++i) {
 		if (accounts[i]->getAccountNumber() == account_number) {
 			delete accounts[i];
-			accounts[i] = accounts[--size];
+			accounts[i] = accounts[size--];
+			return true;
 		}
 	}
+	return false;
+}
+
+void Bank::showMessages() const {
+	for (size_t i = 0; i < messages_size; i++) {
+		std::cout << messages[i] << std::endl;
+	}
+}
+
+
+void Bank::addMessage(const Message& message) {
+	messages.push_back(message);
 }
 
 

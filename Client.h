@@ -1,26 +1,31 @@
 #pragma once
 #include "Account.h"
 #include "Bank.h"
+#include "Vector.hpp"
+#include "Message.h"
+
+
+
+
+//--------------------------------------------------------------------------
+//   DA SE DOOPRAVI SUOBSHTENIQTA KOITO POLUCHAVA CLIENTA!!!!!!!!!!!!!!!!!!!!!!
+//--------------------------------------------------------------------------
+
 
 
 class Client : public Account {
 private:
 	Bank array[1024];
+	Vector<Message> messages;
 
 public:
 	Client();
 
 	void check_avl()const;
 
-	void open()const {
-		//v main moje da se razpishe logikata!
-		//samiqt  bank koito sme suzdali prosto uvelichavame size++ i pravim nov akaunt
-	}
+	void open(Bank& bank);
 
-	void close()const {
-		//v main moje da se razpishe logikata!
-		//samiqt  bank koito sme suzdali prosto uvelichavame size-- i triem akaunt
-	}
+	void close(Bank& other,int account_number);
 
 	void redeem(Bank& other, int verificationNum);
 
