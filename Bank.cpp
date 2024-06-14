@@ -87,15 +87,18 @@ bool Bank::close_account(int account_number) {
 	return false;
 }
 
-void Bank::showMessages() const {
-	for (size_t i = 0; i < messages.getCount(); i++) {
-		std::cout << messages[i] << std::endl;
+int Bank::getLeastBusyWorker()const {
+	int index = 0;
+	int employeesCount = employees.getCount();
+
+	int leastTasks = employees[0]->getTasksSize();
+	for (size_t i = 0; i < employeesCount; i++)
+	{
+		if (employees[i]->getTasksSize() < leastTasks) {
+			index = i;
+			leastTasks = employees[i]->getTasksSize();
+		}
 	}
+	return index;
 }
-
-
-void Bank::addMessage(const Message& message) {
-	messages.push_back(message);
-}
-
 

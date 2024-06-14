@@ -28,9 +28,9 @@ public:
 
 	void close(const String& bank_name,int account_number);
 
-	void redeem(const Bank& other, int verificationNum);
+	void redeem(const String& bank_name, int verificationNum);
 
-	void change(Bank& new_bank, const Bank& other_bank, int account_number);
+	void change(const String& new_bank, const String& other_bank, int account_number);
 
 	void list(const Bank& bank);
 

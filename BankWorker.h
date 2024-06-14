@@ -13,13 +13,18 @@
 
 class BankWorker : public Account, public Bank {
 private:
-	Vector<Task> tasks;
+	Vector<Task*> tasks;
 
 public:
-	BankWorker(int acc_num, int _UCN, unsigned _age, String own)
-		: Account(acc_num, own, _UCN, _age, UserRoles::BankWorker) {}
 
-	void addTask(const Task& task) {
+	int getTasksSize()const {
+		return tasks.getCount();
+	}
+
+	BankWorker(int acc_num, int _UCN, unsigned _age, String own,UserRoles role)
+		: Account(acc_num,  _UCN, _age, own, role) {}
+
+	void addTask(Task* task) {
 		tasks.push_back(task);
 	}
 

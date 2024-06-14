@@ -8,6 +8,11 @@ enum class UserRoles {
 
 };
 
+
+//-----------------------------------------------------------------
+//NAPRAVI VSICHKO DA E OT TIP STRING ZASHTOTO SE PRIEMA NAPISANO CHAROVE OT KONZOLATA!!!!
+//--------------------------------------------------------------------
+
 class Account {
 private:
 	/*String firstName;
@@ -29,6 +34,7 @@ public:
 	int getAccountNumber()const;
 	unsigned getUCN()const;
 	unsigned getAge()const;
+	UserRoles getRole()const;
 
 	void setBalance(double sum);
 };

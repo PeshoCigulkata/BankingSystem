@@ -3,6 +3,7 @@
 #include "Account.h"
 #include "Message.h"
 #include "Vector.hpp"
+#include "BankWorker.h"
 
 class Bank {
 private:
@@ -14,7 +15,8 @@ private:
 	double CheckSums[1024]; //every index indicates an account with the checks value they have received, if its 0 => no check received
 
 	Vector<Message> messages;
-
+	Vector<Task> tasks;
+	Vector<BankWorker*> employees;
 	void free();
 	void resize();
 public:
@@ -30,10 +32,20 @@ public:
 
 	bool close_account(int account_number);
 
-	void addMessage(const Message& message);
+	
+	int getLeastBusyWorker()const;
 
-	void showMessages() const;
+	int getTaskSize()const {
+		return tasks.getCount();
+	}
 
+	void receiveTask(const Task& toDo) {
+		tasks.push_back(toDo);
+	}
+
+	BankWorker* getEmployeeByIndex(int index)const {
+		return employees[index];
+	}
 
 	Bank(const Bank& other) = delete;
 	Bank& operator=(const Bank& other) = delete;

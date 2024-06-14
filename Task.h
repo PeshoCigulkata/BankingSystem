@@ -26,8 +26,8 @@ private:
     unsigned age;
     int account_id;
 public:
-    Task(int id, TaskType type, const String& clientName, const String& details)
-        : id(id), type(type), clientName(clientName), details(details) {}
+    Task(TaskType type, const String& clientName)
+        : /*id(id),*/ type(type), clientName(clientName) {}
 
     int getId() const {
         return id;

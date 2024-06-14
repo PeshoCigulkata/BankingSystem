@@ -63,40 +63,40 @@ void Client::open(const String& bank_name) {
 	}
 	Bank* currentBank = banks[index];
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
-	currentBank->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(TaskType::Open);
+	Task currentTask(TaskType::Open, getOwner());
+	currentBank->receiveTask(currentTask);
 
-
-
-
-//	tuk E LOGIKATAAAAAAAAAAA!!!!!!!!!!
-
-	//int acc_num = bank->create_account(getOwner(), getRole(), getUCN(), getAge());
-	
-	String str;
-	Message message("Open account : " + getOwner() + toString(getUCN(), str) + toString(getAge(), str));
-	currentBank->addMessage(message);
-	messages.push_back(message);
+	size_t idx = static_cast<size_t>(currentBank->getTaskSize()) - 1;        //from potential fixes! without it it can cause problems
+	currentBank->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(&currentTask);
 }
 
 void Client::close(const String& bank_name, int account_number) {
-	if (bank.close_account(account_number)) {  //It means such account exists! The operation to close the account has succeeded.
-		String str;
-		Message message("Closed account number: " + toString(account_number, str));
-		Message forClientMessage("You have closed an account! ");
-		messages.push_back(forClientMessage);
-		bank.addMessage(message);
+	int index = getBankIndex(bank_name);
+	if (index == -1) {
+		throw std::exception("Bank with this name doesnt exist!");
 	}
-	else {
-		throw std::runtime_error("This account doesnt exist! ");
-	}
+
+	Bank* currentBank = banks[index];
+	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
+	Task currentTask(TaskType::Close, getOwner());
+	currentBank->receiveTask(currentTask);
+
+	size_t idx = static_cast<size_t>(currentBank->getTaskSize()) - 1;        //from potential fixes! without it it can cause problems
+	currentBank->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(&currentTask);
 }
 
-void Client::redeem(const Bank& other, int verificationNum) {
-	for (size_t i = 0; i < other.getSize(); i++)
+void Client::redeem(const String& bank_name, int verificationNum) {
+	int index = getBankIndex(bank_name);
+	if (index == -1) {
+		throw std::exception("Bank with this name doesnt exist!");
+	}
+
+	Bank* currentBank = banks[index];
+	for (size_t i = 0; i < currentBank->getSize(); i++)
 	{
-		if (other.get_account(i)->getAccountNumber() == verificationNum) {
-			if (other.getCheckAtIdx(i) != 0) {
-				double sum = other.getCheckAtIdx(i);
+		if (currentBank->get_account(i)->getAccountNumber() == verificationNum) {
+			if (currentBank->getCheckAtIdx(i) != 0) {
+				double sum = currentBank->getCheckAtIdx(i);
 				setBalance(sum);
 			}
 			else {
@@ -106,35 +106,20 @@ void Client::redeem(const Bank& other, int verificationNum) {
 	}
 }
 
-void Client::change(Bank& new_bank, const Bank& other_bank, int account_number) {
-	int index = -1;
-	for (size_t i = 0; i < other_bank.getSize(); i++)
-	{
-		if (other_bank.get_account(i)->getAccountNumber() == account_number) {
-			index = i;
-		}
+void Client::change(const String& new_bank, const String& this_bank, int account_number) {
+	int indexCurrent = getBankIndex(this_bank);
+	int indexNew = getBankIndex(new_bank);
+	if (indexCurrent == -1 || indexNew == -1) {
+		throw std::exception("Incorrect bank names!");
 	}
+	
+	Bank* currentBank = banks[indexCurrent];
+	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
+	Task currentTask(TaskType::Change, getOwner());
+	currentBank->receiveTask(currentTask);
 
-	if (index == -1) {
-		throw std::runtime_error("Non-existant account! ");
-	}
-
-	Account* account = other_bank.get_account(index);
-
-
-	if (account) {
-		String owner = account->getOwner();
-		UserRoles role = account->getRole();
-		double balance = account->getBalance();
-
-		int new_acc_num = new_bank.create_account(owner, role);
-		Account* new_account = new_bank.get_account(new_acc_num);
-
-		new_account->setBalance(balance);
-		//other_bank.close_account(account_number);
-
-	}
-
+	size_t idx = static_cast<size_t>(currentBank->getTaskSize()) - 1;        //from potential fixes! without it it can cause problems
+	currentBank->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(&currentTask);
 }
 
 
