@@ -1,13 +1,9 @@
 #include "Account.h"
 
 
-Account::Account(int acc_num, int _UCN,unsigned _age, String _owner) : account_number(acc_num), UCN(_UCN),age(_age), owner(_owner){
+Account::Account(int acc_num, int _UCN,unsigned _age, String _owner, UserRoles role) : account_number(acc_num), UCN(_UCN),age(_age), owner(_owner),role(role){
 	balance = 0;
 
-}
-
-Account::Account(UserRoles _role) {
-	role = _role;
 }
 
 String Account::getOwner()const {

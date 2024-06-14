@@ -33,25 +33,55 @@ String toString(unsigned number, String str) {
 	return str;
 }
 
+int Client::getBankIndex(const String& bankName) const {
+	unsigned banksCount = banks.getCount();
 
-Client::Client() :Account(UserRoles::Client) {}
-
-void Client::check_avl()const {
-	std::cout << getBalance();
+	for (size_t i = 0; i < banksCount; i++)
+	{
+		if ((banks[i]->getName() == bankName)) {
+			return i;
+		}
+	}
+	return -1;
 }
 
-void Client::open(Bank& bank) {
-	int acc_num = bank.create_account(getOwner(), getRole(), getUCN(), getAge());
+Client::Client(int acc_num, int _UCN, unsigned _age, String _owner, UserRoles role) :Account(acc_num, _UCN, _age, _owner, role) {}
+
+void Client::check_avl(const String& bank_name, int account_number)const {
+	int index = getBankIndex(bank_name);
+	if (index == -1) {
+		throw std::exception("Bank with this name doesnt exist!");
+	}
+
+	std::cout << "Balance: " << banks[index]->get_account(account_number)->getBalance() << std::endl;
+}
+
+void Client::open(const String& bank_name) {
+	int index = getBankIndex(bank_name);
+	if (index == -1) {
+		throw std::exception("Bank with this name doesnt exist!");
+	}
+	Bank* currentBank = banks[index];
+	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
+	currentBank->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(TaskType::Open);
+
+
+
+
+//	tuk E LOGIKATAAAAAAAAAAA!!!!!!!!!!
+
+	//int acc_num = bank->create_account(getOwner(), getRole(), getUCN(), getAge());
+	
 	String str;
-	Message message("Opened account number: " + getOwner() + toString(getUCN(), str) + toString(getAge(), str));
-	bank.addMessage(message);
+	Message message("Open account : " + getOwner() + toString(getUCN(), str) + toString(getAge(), str));
+	currentBank->addMessage(message);
 	messages.push_back(message);
 }
 
-void Client::close(Bank& bank, int account_number) {
+void Client::close(const String& bank_name, int account_number) {
 	if (bank.close_account(account_number)) {  //It means such account exists! The operation to close the account has succeeded.
 		String str;
-		Message message("Closed account number: " + toString(account_number,str));
+		Message message("Closed account number: " + toString(account_number, str));
 		Message forClientMessage("You have closed an account! ");
 		messages.push_back(forClientMessage);
 		bank.addMessage(message);
@@ -61,7 +91,7 @@ void Client::close(Bank& bank, int account_number) {
 	}
 }
 
-void Client::redeem(Bank& other, int verificationNum) {
+void Client::redeem(const Bank& other, int verificationNum) {
 	for (size_t i = 0; i < other.getSize(); i++)
 	{
 		if (other.get_account(i)->getAccountNumber() == verificationNum) {

@@ -22,25 +22,13 @@ private:
 public:
 	virtual UserRoles getRole()const;
 
-	Account(int acc_num, int _UCN, unsigned _age, String owner);
-	Account(UserRoles _role);
+	Account(int acc_num, int _UCN, unsigned _age, String owner, UserRoles role);
 
 	String getOwner()const;
 	double getBalance()const;
-	void setBalance(double sum);
 	int getAccountNumber()const;
 	unsigned getUCN()const;
 	unsigned getAge()const;
 
-	/*void deposit(double amount) {
-		balance += amount;
-	}
-
-	bool withdraw(double amount) {
-		if (balance >= amount) {
-			balance -= amount;
-			return true;
-		}
-		return false;
-	}*/
+	void setBalance(double sum);
 };

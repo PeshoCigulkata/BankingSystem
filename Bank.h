@@ -6,16 +6,17 @@
 
 class Bank {
 private:
-   String name;               // name of the bank
-   Account** accounts;
-   double CheckSums[1024]; //every index indicates an account with the checks value they have received, if its 0 => no check received
-   unsigned size;
-   unsigned capacity;
-   Vector<Message> messages;
-   unsigned messages_size;
+	String name;       // name of the bank
 
-  void free();
-  void resize();
+	Account** accounts;
+	unsigned size;
+	unsigned capacity;
+	double CheckSums[1024]; //every index indicates an account with the checks value they have received, if its 0 => no check received
+
+	Vector<Message> messages;
+
+	void free();
+	void resize();
 public:
 	Bank();
 	Bank(String n);
@@ -25,7 +26,7 @@ public:
 	double getCheckAtIdx(unsigned idx)const;
 	String getName()const;
 
-	int create_account(String owner, UserRoles role,unsigned UCN,unsigned age);
+	int create_account(String owner, UserRoles role, unsigned UCN, unsigned age);
 
 	bool close_account(int account_number);
 
@@ -35,6 +36,6 @@ public:
 
 
 	Bank(const Bank& other) = delete;
-	Bank& operator=(const Bank& other)=delete;
+	Bank& operator=(const Bank& other) = delete;
 	~Bank();
 };

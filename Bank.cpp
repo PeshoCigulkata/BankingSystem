@@ -88,7 +88,7 @@ bool Bank::close_account(int account_number) {
 }
 
 void Bank::showMessages() const {
-	for (size_t i = 0; i < messages_size; i++) {
+	for (size_t i = 0; i < messages.getCount(); i++) {
 		std::cout << messages[i] << std::endl;
 	}
 }

@@ -15,23 +15,26 @@
 
 class Client : public Account {
 private:
-	Bank array[1024];
+	Vector<Bank*> banks;
 	Vector<Message> messages;
 
+int getBankIndex(const String& bankName) const;
 public:
-	Client();
+	Client(int acc_num, int _UCN, unsigned _age, String owner, UserRoles role);
 
-	void check_avl()const;
+	void check_avl(const String& bank_name, int account_number)const;
 
-	void open(Bank& bank);
+	void open(const String& bank_name);
 
-	void close(Bank& other,int account_number);
+	void close(const String& bank_name,int account_number);
 
-	void redeem(Bank& other, int verificationNum);
+	void redeem(const Bank& other, int verificationNum);
 
 	void change(Bank& new_bank, const Bank& other_bank, int account_number);
 
-
 	void list(const Bank& bank);
 
+	void message()const;
+
+	
 };
