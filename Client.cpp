@@ -45,7 +45,7 @@ int Client::getBankIndex(const String& bankName) const {
 	return -1;
 }
 
-Client::Client(int acc_num, int _UCN, unsigned _age, String _owner, UserRoles role) :Account(acc_num, _UCN, _age, _owner, role) {}
+Client::Client(String acc_num, String _UCN, unsigned _age, String _owner, UserRoles role) :Account(acc_num, _UCN, _age, _owner, role) {}
 
 void Client::check_avl(const String& bank_name, int account_number)const {
 	int index = getBankIndex(bank_name);
@@ -61,6 +61,7 @@ void Client::open(const String& bank_name) {
 	if (index == -1) {
 		throw std::exception("Bank with this name doesnt exist!");
 	}
+
 	Bank* currentBank = banks[index];
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
 	Task currentTask(TaskType::Open, getOwner());
@@ -85,7 +86,7 @@ void Client::close(const String& bank_name, int account_number) {
 	currentBank->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(&currentTask);
 }
 
-void Client::redeem(const String& bank_name, int verificationNum) {
+void Client::redeem(const String& bank_name, const String& verificationNum) {
 	int index = getBankIndex(bank_name);
 	if (index == -1) {
 		throw std::exception("Bank with this name doesnt exist!");
@@ -96,7 +97,7 @@ void Client::redeem(const String& bank_name, int verificationNum) {
 	{
 		if (currentBank->get_account(i)->getAccountNumber() == verificationNum) {
 			if (currentBank->getCheckAtIdx(i) != 0) {
-				double sum = currentBank->getCheckAtIdx(i);
+				String sum = currentBank->getCheckAtIdx(i);
 				setBalance(sum);
 			}
 			else {
@@ -123,25 +124,36 @@ void Client::change(const String& new_bank, const String& this_bank, int account
 }
 
 
-void Client::list(const Bank& bank) {
-	int index = -1;
-	for (size_t i = 0; i < 1024; i++)
-	{
-		if (strcmp(bank.getName().c_str(), array[i].getName().c_str())) {
-			index = i;
-		}
-	}
+void Client::list(const String& bank_name) {
+	int index = getBankIndex(bank_name);
 	if (index == -1) {
-		throw "greshka, nqmame akaunt v takava banka!";
-	}
-	else {
-		//we have an account in such bank
-		for (size_t i = 0; i < bank.getSize(); i++)
-		{
-			if (strcmp(bank.get_account(i)->getOwner().c_str(), getOwner().c_str())) {
-				std::cout << getAccountNumber();
-			}
-		}
+		throw std::exception("Bank with this name doesnt exist!");
 	}
 
+	Bank* currentBank = banks[index];
+	bool hasAcc = false;
+	for (size_t i = 0; i < currentBank->getSize(); i++)
+	{
+		if (strcmp(getOwner().c_str(),currentBank->get_account_by_index(i)->getOwner().c_str() )){
+			currentBank->print_account_by_index(i);
+			hasAcc = true;
+		}
+	}
+	if (hasAcc == false) {
+		std::cout << "non existant accs";
+	}
 }
+
+
+//int main() {
+//	Client c1("Borimir", "Aleksiev", "*.............*", 19, "Client", "*", "Vidima");
+//
+//	Bank b("Fibank");
+//	BankWorker e1("asd", "dsa", "*....*", 20, "Employee", "*", "Fibank");
+//
+//	//c1.messages();
+//	c1.open("Fibank");
+//	e1.approveTask(0);
+//	std::cout << 6;
+//
+//}

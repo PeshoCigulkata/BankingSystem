@@ -3,74 +3,67 @@
 
 
 enum class TaskType {
-    Open,
-    Close,
-    Change
+	Open,
+	Close,
+	Change
 };
 
 enum class UserRoles {
-    Client,
-    BankWorker,
-    OtherFirmWorker,
-    undefined
+	Client,
+	BankWorker,
+	OtherFirmWorker,
+	undefined
 
 };
 
 class Task {
 private:
-    int id;
-    TaskType type;
-    String clientName;
-    UserRoles role;
-    int UCN;
-    unsigned age;
-    int account_id;
+	//int id;
+	TaskType type;
+	Client* client;
 public:
-    Task(TaskType type, const String& clientName)
-        : /*id(id),*/ type(type), clientName(clientName) {}
+	Task(TaskType type, Client* client) :type(type), client(client) {}
 
-    int getId() const {
-        return id;
-    }
 
-    int getUCN()const {
-        return UCN;
-    }
 
-    unsigned getAge()const {
-        return age;
-    }
+	String getUCN()const {
+		return client->getUCN();
+	}
 
-    UserRoles getRole()const {
-        return role;
-    }
+	unsigned getAge()const {
+		return client->getAge();
+	}
 
-    TaskType getType() const {
-        return type;
-    }
+	UserRoles getRole()const {
+		return client->getRole();
+	}
 
-    int getAccountId()const {
-        return account_id;
-    }
+	TaskType getType() const {
+		return type;
+	}
 
-    String getClientName() const {
-        return clientName;
-    }
+	const String& getAccountNumber()const {
+		return client->getAccountNumber();
+	}
 
-    String getDetails() const {
-        return details;
-    }
+	const String& getClientName() const {
+		return client->getOwner();
+	}
 
-    String getTypeName() const {
-        switch (type) {
-        case TaskType::Open:
-            return "Open";
-        case TaskType::Close:
-            return "Close";
-        case TaskType::Change:
-            return "Change";
-        default:
-            return "Unknown";
-        }
-    }
+	Client* getClient()const {
+		return client;
+	}
+
+	String getTypeName() const {
+		switch (type) {
+		case TaskType::Open:
+			return "Open";
+		case TaskType::Close:
+			return "Close";
+		case TaskType::Change:
+			return "Change";
+		default:
+			return "Unknown";
+		}
+	}
 };

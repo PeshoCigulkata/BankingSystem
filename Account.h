@@ -17,24 +17,28 @@ class Account {
 private:
 	/*String firstName;
 	String lastName;*/
-	unsigned UCN=0;      //Unique Citizenship Number
+	String UCN=0;      //Unique Citizenship Number
 	unsigned age=0;
-	int account_number=0;
-	double balance=0;
+	String account_number=0;
+	String balance=0;
 	String owner=nullptr;
 
 	UserRoles role=UserRoles::undefined;
 public:
 	virtual UserRoles getRole()const;
 
-	Account(int acc_num, int _UCN, unsigned _age, String owner, UserRoles role);
+	Account(const String& acc_num, const String& _UCN, unsigned _age, const String& owner, UserRoles role);
 
-	String getOwner()const;
-	double getBalance()const;
-	int getAccountNumber()const;
-	unsigned getUCN()const;
+	void printAccount()const {
+		std::cout << account_number << std::endl;
+	}
+
+	const String& getOwner()const;
+	const String& getBalance()const;
+	const String& getAccountNumber()const;
+	const String& getUCN()const;
 	unsigned getAge()const;
 	UserRoles getRole()const;
 
-	void setBalance(double sum);
+	void setBalance(String sum);
 };

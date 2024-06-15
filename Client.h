@@ -20,7 +20,7 @@ private:
 
 int getBankIndex(const String& bankName) const;
 public:
-	Client(int acc_num, int _UCN, unsigned _age, String owner, UserRoles role);
+	Client(String acc_num, String _UCN, unsigned _age, String owner, UserRoles role);
 
 	void check_avl(const String& bank_name, int account_number)const;
 
@@ -28,13 +28,27 @@ public:
 
 	void close(const String& bank_name,int account_number);
 
-	void redeem(const String& bank_name, int verificationNum);
+	void redeem(const String& bank_name, const String& verificationNum);
 
 	void change(const String& new_bank, const String& other_bank, int account_number);
 
-	void list(const Bank& bank);
+	void list(const String& bank);
 
-	void message()const;
+	void message()const {
+		
+			if (messages.getCount()==0) {
+				std::cout << "No messages to show" << std::endl;
+			}
 
-	
+			int count = messages.getCount();
+			for (int i = 0; i < count; i++) {
+				std::cout << "[" << (i) << "] ";
+				messages[i].printMessage();
+			}
+		
+	}
+
+	void addMessage(const Message& message) {
+		messages.push_back(message);
+	}
 };
