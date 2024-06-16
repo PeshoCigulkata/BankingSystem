@@ -37,7 +37,7 @@ public:
 
 	unsigned getSize()const;
 	String getCheckAtIdx(unsigned idx)const;
-	String getName()const;
+	const String& getName()const;
 
 	String create_account(const String& owner, UserRoles role, const String& UCN, unsigned age);
 
@@ -70,6 +70,28 @@ public:
 	void sendAnswerToClient(const Message& message, Client* client) {
 		client->addMessage(message);
 	
+	}
+
+	const String& getClientName(const Client* client)const {
+		return client->getOwner();
+	}
+
+	const String& getClientUCN(const Client* client)const {
+		return client->getUCN();
+	}
+
+	unsigned getClientAge(const Client* client)const {
+		return client->getAge();
+	}
+
+	Client* getClientByAccNum(const String& accNum) {
+		for (size_t i = 0; i < clients.getCount(); i++)
+		{
+			if (clients[i]->getAccountNumber() == accNum) {
+				return clients[i];
+			}
+		}
+		return nullptr;
 	}
 
 	Bank(const Bank& other) = delete;

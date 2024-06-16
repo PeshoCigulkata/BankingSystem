@@ -8,25 +8,27 @@ enum class TaskType {
 	Change
 };
 
-enum class UserRoles {
-	Client,
-	BankWorker,
-	OtherFirmWorker,
-	undefined
-
-};
 
 class Task {
 private:
 	//int id;
 	TaskType type;
 	Client* client;
+	String nameBank = "Unknown";
 public:
 	Task(TaskType type, Client* client) :type(type), client(client) {}
+	Task(const TaskType& type, Client* _client, const String& accountNumber, const String& nameBank) {
+		this->type = type;
+		client = _client;
+		client->setAccountNumber(accountNumber);
+		
+	}
 
+	const String& getBankName()const {
+		return nameBank;
+	}
 
-
-	String getUCN()const {
+	const String& getUCN()const {
 		return client->getUCN();
 	}
 

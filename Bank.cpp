@@ -60,7 +60,7 @@ String Bank::getCheckAtIdx(unsigned idx)const {
 }
 
 
-String Bank::getName()const {
+const String& Bank::getName()const {
 	return name;
 }
 

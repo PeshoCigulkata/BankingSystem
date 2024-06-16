@@ -63,37 +63,65 @@ void BankWorker::viewTask(int task_id)const {
 void BankWorker::approveTask(int task_id) {
 	Task* currentTask = getTaskByIndex(task_id);
 	//TRQBVA DA IZPRATIM SUOBSHTENIE DO CLIENTA
-	String str;
-	Message message("You have opened an account in: " + bank->getName() + ". Your account ID is: " + toString(bank->getSize(), str));
-	bank->sendAnswerToClient(message, currentTask->getClient());
+	if (bank->validateUser(currentTask->getClient())) {
+		String str;
+		Message message("You have opened an account in: " + bank->getName() + ". Your account ID is: " + toString(bank->getSize(), str));
+		bank->sendAnswerToClient(message, currentTask->getClient());
 
-	bank->create_account(currentTask->getClientName(), currentTask->getRole(), currentTask->getUCN(), currentTask->getAge());
+		bank->create_account(currentTask->getClientName(), currentTask->getRole(), currentTask->getUCN(), currentTask->getAge());
+	}
 }
 
 void BankWorker::disapproveTask(int task_id, const Message message) {
 	Task* currentTask = getTaskByIndex(task_id);
-	//----------------------------------
-	////// WE MUST VALIDATE THE USER!!!          DONE!!
-	//----------------------------------
 
 	if (bank->validateUser(currentTask->getClient())) {
 		if (currentTask->getType() == TaskType::Open) {
 			Message message("Your request is denied: ");
 			bank->sendAnswerToClient(message, currentTask->getClient());
+			tasks.remove(task_id);
 		}
 		else if (currentTask->getType() == TaskType::Close) {
 			Message message("Your request is denied: ");
 			bank->sendAnswerToClient(message, currentTask->getClient());
+			tasks.remove(task_id);
 		}
 		else if (currentTask->getType() == TaskType::Change) {
 			String str;
 			Message message("You have opened an account in: " + bank->getName() + ". Your account ID is: " + toString(bank->getSize(), str));
 			bank->sendAnswerToClient(message, currentTask->getClient());
+			tasks.remove(task_id);
 		}
 	}
 	else {
 		std::cout << "Such account doesnt exist!" << std::endl;
 		return;
 	}
+}
+
+bool BankWorker::validateUser(int task_id) {
+	Task* currentTask = getTaskByIndex(task_id);
+
+	Client* currentClient = currentTask->getClient();
+	String BankName = currentTask->getBankName();
+	Bank* oldBank = currentClient->getBankByName(BankName);
+
+	if (currentTask->getClientName() == oldBank->getClientName(currentClient) && currentTask->getUCN() == oldBank->getClientUCN(currentClient) && currentTask->getAge() == oldBank->getClientAge(currentClient)) {
+		//User successfuly validated!
+		// funckiq WANTS TO APPROVE, v konzolata pishem string i sravnqvame s "true" i "false"
+		//if(approved){
+		//-- send Message che e uspeshno
+		//}else{
+		//send message che ne e approved
+		//}
+	}
+	else {
+		throw std::runtime_error("Validation of user failed!");
+	}
+
+
+
 
 }
+
+

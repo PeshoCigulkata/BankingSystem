@@ -40,5 +40,6 @@ public:
 	unsigned getAge()const;
 	UserRoles getRole()const;
 
-	void setBalance(String sum);
+	void setBalance(const String& sum);
+	void setAccountNumber(const String& sum);
 };

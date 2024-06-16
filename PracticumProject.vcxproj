@@ -130,8 +130,10 @@
     <ClInclude Include="Account.h" />
     <ClInclude Include="Bank.h" />
     <ClInclude Include="BankWorker.h" />
+    <ClInclude Include="Check.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Message.h" />
+    <ClInclude Include="OtherFirmWorker.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="Vector.hpp" />
     <ClInclude Include="String.h" />
@@ -140,6 +142,7 @@
     <ClCompile Include="Account.cpp" />
     <ClCompile Include="Bank.cpp" />
     <ClCompile Include="BankWorker.cpp" />
+    <ClCompile Include="Check.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Message.cpp" />

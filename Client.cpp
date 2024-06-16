@@ -47,7 +47,7 @@ int Client::getBankIndex(const String& bankName) const {
 
 Client::Client(String acc_num, String _UCN, unsigned _age, String _owner, UserRoles role) :Account(acc_num, _UCN, _age, _owner, role) {}
 
-void Client::check_avl(const String& bank_name, int account_number)const {
+void Client::check_avl(const String& bank_name, const String& account_number)const {
 	int index = getBankIndex(bank_name);
 	if (index == -1) {
 		throw std::exception("Bank with this name doesnt exist!");
@@ -64,7 +64,7 @@ void Client::open(const String& bank_name) {
 
 	Bank* currentBank = banks[index];
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
-	Task currentTask(TaskType::Open, getOwner());
+	Task currentTask(TaskType::Open, this);
 	currentBank->receiveTask(currentTask);
 
 	size_t idx = static_cast<size_t>(currentBank->getTaskSize()) - 1;        //from potential fixes! without it it can cause problems
@@ -79,7 +79,7 @@ void Client::close(const String& bank_name, int account_number) {
 
 	Bank* currentBank = banks[index];
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
-	Task currentTask(TaskType::Close, getOwner());
+	Task currentTask(TaskType::Close,this);
 	currentBank->receiveTask(currentTask);
 
 	size_t idx = static_cast<size_t>(currentBank->getTaskSize()) - 1;        //from potential fixes! without it it can cause problems
@@ -116,7 +116,7 @@ void Client::change(const String& new_bank, const String& this_bank, int account
 	
 	Bank* currentBank = banks[indexCurrent];
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
-	Task currentTask(TaskType::Change, getOwner());
+	Task currentTask(TaskType::Change, this);
 	currentBank->receiveTask(currentTask);
 
 	size_t idx = static_cast<size_t>(currentBank->getTaskSize()) - 1;        //from potential fixes! without it it can cause problems
