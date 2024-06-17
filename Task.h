@@ -16,7 +16,13 @@ private:
 	Client* client;
 	String nameBank = "Unknown";
 public:
-	Task(TaskType type, Client* client) :type(type), client(client) {}
+	Task() = default;
+	Task(TaskType type, Client* client) :type(type), client(client) {
+	
+	}
+	Task(TaskType type, Client* _client,const String& accountID) :type(type), client(_client) {
+		client->setAccountNumber(accountID);
+	}
 	Task(const TaskType& type, Client* _client, const String& accountNumber, const String& nameBank) {
 		this->type = type;
 		client = _client;
@@ -48,15 +54,11 @@ public:
 		return client->getAccountNumber();
 	}
 
-	const String& getClientName() const {
-		return client->getOwner();
-	}
-
 	Client* getClient()const {
 		return client;
 	}
 
-	String getTypeName() const {
+	const String& getTypeName() const {
 		switch (type) {
 		case TaskType::Open:
 			return "Open";

@@ -6,7 +6,13 @@
 
 
 
-
+//User successfuly validated!
+		// funckiq WANTS TO APPROVE, v konzolata pishem string i sravnqvame s "true" i "false"
+		//if(approved){
+		//-- send Message che e uspeshno
+		//}else{
+		//send message che ne e approved
+		//}
 
 // GRESHNI KONSTRUKTORI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -16,15 +22,11 @@ private:
 	Vector<Task*> tasks;
 	Bank* bank;
 
+	int getTasksSize()const;
+	Task* getTaskByIndex(unsigned idx)const;
 
 public:
-
-	int getTasksSize()const;
-	Task* getTaskByIndex(unsigned idx)const {
-		return tasks[idx];
-	}
-
-	BankWorker(String acc_num, String _UCN, unsigned _age, String own, UserRoles role);
+	BankWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
 
 	void addTask(Task* task);
 
@@ -36,24 +38,6 @@ public:
 
 	void disapproveTask(int task_id, const Message message);
 
-	bool validateUser(int task_id, const Bank& oldBank) {
-		for (size_t i = 0; i < oldBank.getSize(); i++)
-		{
-			if (tasks[i].getType() == TaskType::Change) {
-				Account* account = oldBank.get_account(tasks[i].getAccountId());
-				if (account) {
-					Message message("Task validated by " + getOwner());
-					addMessage(message);
-				}
-				else {
-					Message message("Validation failed by " + getOwner());
-					addMessage(message);
-				}
-			}
-		}
-	}
-
-
-
+	bool validate(int task_id);
 
 };

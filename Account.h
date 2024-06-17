@@ -8,32 +8,27 @@ enum class UserRoles {
 
 };
 
-
-//-----------------------------------------------------------------
-//NAPRAVI VSICHKO DA E OT TIP STRING ZASHTOTO SE PRIEMA NAPISANO CHAROVE OT KONZOLATA!!!!
-//--------------------------------------------------------------------
-
 class Account {
 private:
-	/*String firstName;
-	String lastName;*/
-	String UCN=0;      //Unique Citizenship Number
+	String firstName="";
+	String lastName="";
+	String UCN="";      //Unique Citizenship Number
 	unsigned age=0;
-	String account_number=0;
-	String balance=0;
-	String owner=nullptr;
+	String accountNumber="";
+	String balance="";
+	String password = "";     // <---- //TODO:
 
 	UserRoles role=UserRoles::undefined;
 public:
-	virtual UserRoles getRole()const;
-
-	Account(const String& acc_num, const String& _UCN, unsigned _age, const String& owner, UserRoles role);
+	Account() = default;
+	Account(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
 
 	void printAccount()const {
-		std::cout << account_number << std::endl;
+		std::cout << accountNumber << std::endl;
 	}
 
-	const String& getOwner()const;
+	const String& getFirstName()const;
+	const String& getLastName()const;
 	const String& getBalance()const;
 	const String& getAccountNumber()const;
 	const String& getUCN()const;
@@ -41,5 +36,9 @@ public:
 	UserRoles getRole()const;
 
 	void setBalance(const String& sum);
-	void setAccountNumber(const String& sum);
+	void setAccountNumber(const String& num);
+
+	virtual void exit() = 0;
+	virtual void help()const = 0;
+	virtual void whoami()const = 0;
 };

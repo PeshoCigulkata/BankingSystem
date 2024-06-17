@@ -5,7 +5,7 @@
 #include "Vector.hpp"
 #include "BankWorker.h"
 #include "Client.h"
-//bankata znae za svoite klienti i rabotnivi
+//bankata znae za svoite klienti i rabotnici
 
 class Bank {
 private:

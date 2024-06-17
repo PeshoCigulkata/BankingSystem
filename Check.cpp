@@ -2,9 +2,9 @@
 
 
 
-Check::Check(const String& code, double toSendSum) : code(code), sum(toSendSum) {}
+Check::Check(const String& code, const String& toSendSum) : code(code), sum(toSendSum) {}
 
-double Check::getSum() const
+const String& Check::getSum() const
 {
 	return sum;
 }

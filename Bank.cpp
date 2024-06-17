@@ -102,7 +102,7 @@ String Bank::create_account(const String& owner, UserRoles role, const String& U
 	String buff = "";
 	String str = toString(accNum, buff);
 	String account_number = str;
-	accounts[size++] = new Account(account_number, UCN, age, owner,role);
+	accounts[size++] = new Account*(account_number, UCN, age, owner,role);
 	//opravi v zavisimost ot rolqta!
 	return account_number;
 }
