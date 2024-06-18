@@ -1,5 +1,6 @@
 #pragma once
 #include "String.h"
+#include "Login.h"
 enum class UserRoles {
 	Client,
 	BankWorker,
@@ -8,7 +9,7 @@ enum class UserRoles {
 
 };
 
-class Account {
+class Account: public Login {
 private:
 	String firstName="";
 	String lastName="";
@@ -22,10 +23,6 @@ private:
 public:
 	Account() = default;
 	Account(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
-
-	void printAccount()const {
-		std::cout << accountNumber << std::endl;
-	}
 
 	const String& getFirstName()const;
 	const String& getLastName()const;

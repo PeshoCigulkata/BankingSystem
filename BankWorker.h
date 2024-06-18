@@ -22,7 +22,6 @@ private:
 	Vector<Task*> tasks;
 	Bank* bank;
 
-	int getTasksSize()const;
 	Task* getTaskByIndex(unsigned idx)const;
 
 public:
@@ -40,4 +39,9 @@ public:
 
 	bool validate(int task_id);
 
+	int getTasksSize()const;
+
+	virtual void exit()override; //TODO!!!!!!!!!!!!!!!!!
+	virtual void whoami()const override;
+	virtual void help()const override;
 };

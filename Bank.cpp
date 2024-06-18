@@ -35,101 +35,35 @@ String toString(unsigned number, String str) {
 
 
 
-Bank::Bank(String _name) :name(_name) {
-	for (unsigned i = 0; i < 1024; ++i) {
-		CheckSums[i] = 0;
-	}
-}
-
-Account* Bank::get_account(const String& account_number)const {
-	for (unsigned i = 0; i < size; ++i) {
-		if (accounts[i]->getAccountNumber() == account_number) {
-			return accounts[i];
-		}
-	}
-	return nullptr;
-
-}
-
-unsigned Bank::getSize()const {
-	return size;
-}
-
-String Bank::getCheckAtIdx(unsigned idx)const {
-	return CheckSums[idx];
-}
-
+Bank::Bank(String _name) :name(_name) {}
 
 const String& Bank::getName()const {
 	return name;
 }
 
-
-Bank::~Bank() {
-	free();
-}
-
-void Bank::free() {
-	for (unsigned i = 0; i < size; ++i) {
-		delete accounts[i];
-	}
-	delete[] accounts;
-
-	for (size_t i = 0; i < 1024; i++)
-	{
-		CheckSums[i] = 0;
-	}
-	unsigned size = 0;
-	unsigned capacity = 0;
-	name = nullptr;
-}
-
-void Bank::resize() {
-	capacity *= 2;
-	Account** new_accounts = new Account * [capacity];
-	for (unsigned i = 0; i < size; ++i) {
-		new_accounts[i] = accounts[i];
-	}
-	delete[] accounts;
-	accounts = new_accounts;
-}
-
-String Bank::create_account(const String& owner, UserRoles role, const String& UCN, unsigned age) {
-	if (size >= capacity) {
-		resize();
-	}
-	int accNum = size + 1;
+void Bank::create_account(const String& balance, Client* client) {
+	int accNum = accounts.getCount() + 1;
 	String buff = "";
-	String str = toString(accNum, buff);
-	String account_number = str;
-	accounts[size++] = new Account*(account_number, UCN, age, owner,role);
-	//opravi v zavisimost ot rolqta!
-	return account_number;
+	String account_number = toString(accNum, buff);
+	Client client(client->getFirstName(), client->getLastName(), client->getUCN(), client->getAge(), account_number, client->getRole());
+
+	clients.push_back(client);
 }
 
-Bank::Bank() : name("Unnamed"), size(0), capacity(10) {
-	accounts = new Account * [capacity] {nullptr};
-	for (unsigned i = 0; i < 1024; ++i) {
-		CheckSums[i] = 0;
-	}
-}
-
-bool Bank::close_account(const String& account_number) {
-	for (unsigned i = 0; i < size; ++i) {
-		if (accounts[i]->getAccountNumber() == account_number) {
-			delete accounts[i];
-			accounts[i] = accounts[size--];
-			return true;
+void Bank::close_account(const String& account_number) {
+	for (size_t i = 0; i < clients.getCount(); ++i) {
+		if (clients[i]->getAccountNumber() == account_number) {
+			delete clients[i];
+			clients[i] = nullptr;
 		}
 	}
-	return false;
 }
 
 int Bank::getLeastBusyWorker()const {
 	int index = 0;
 	int employeesCount = employees.getCount();
 
-	int leastTasks = employees[0]->getTasksSize();
+	int leastTasks = employees[0]->getTasksSize();  //Start of the search
 	for (size_t i = 0; i < employeesCount; i++)
 	{
 		if (employees[i]->getTasksSize() < leastTasks) {
@@ -140,3 +74,38 @@ int Bank::getLeastBusyWorker()const {
 	return index;
 }
 
+bool Bank::validateUser(const Client* client)const {
+	for (size_t i = 0; i < clients.getCount(); i++)
+	{
+		if (clients[i] == client) {
+			return true;
+		}
+	}
+	return false;
+}
+
+const Client* Bank::getClient(const Client* client)const {
+	for (size_t i = 0; i < clients.getCount(); i++)
+	{
+		if (clients[i] == client) {
+			return clients[i];
+		}
+	}
+}
+
+void Bank::receiveTask(const Task& toDo) {
+	tasks.push_back(toDo);
+}
+
+BankWorker* Bank::getEmployeeByIndex(int index)const {
+	return employees[index];
+}
+
+int Bank::getTaskSize() const
+{
+	return tasks.getCount();
+}
+
+void Bank::sendAnswerToClient(const Message& message, Client* client) {
+	client->addMessage(message);
+}

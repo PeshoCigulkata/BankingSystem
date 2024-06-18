@@ -14,4 +14,5 @@ public:
 	const String& getSum()const;
 	const String& getCode()const;
 
+	~Check() = default;
 };

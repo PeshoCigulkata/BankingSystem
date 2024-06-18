@@ -11,9 +11,12 @@ private:
 	Vector<Message> messages;
 	Vector<Check> checks;
 	int getBankIndex(const String& bankName) const;
-
+	String password = "";
 public:
 	Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
+	Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& password, const UserRoles& role) {
+
+	}
 
 	void check_avl(const String& bank_name, const String& account_number)const;
 

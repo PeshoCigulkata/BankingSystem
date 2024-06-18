@@ -7,94 +7,43 @@
 #include "Client.h"
 //bankata znae za svoite klienti i rabotnici
 
+
+//TODO: FIX CLIENTS!	
+
 class Bank {
 private:
-	String name;       // name of the bank
+	String name="";       // name of the bank
 
-	Account** accounts;
-	unsigned size;
-	unsigned capacity;
-	String CheckSums[1024]; //every index indicates an account with the checks value they have received, if its 0 => no check received
-
+	Vector<Account*> accounts;
 	Vector<Message> messages;
 	Vector<Task> tasks;
 	Vector<BankWorker*> employees;
 	Vector<Client*> clients;
-	void free();
-	void resize();
+	
 public:
-	Bank();
+	Bank()=default;
 	Bank(String n);
 
-	Account* get_account(const String& account_id)const;
-	Account* get_account_by_index(unsigned idx)const {
-		return accounts[idx];
-	}
-
-	void print_account_by_index(unsigned idx)const {
-		accounts[idx]->printAccount();
-	}
-
-	unsigned getSize()const;
-	String getCheckAtIdx(unsigned idx)const;
 	const String& getName()const;
 
-	String create_account(const String& owner, UserRoles role, const String& UCN, unsigned age);
+	void create_account(const String& balance,Client* client);
+	void close_account(const String& account_number);
 
-	bool close_account(const String& account_number);
-
-	bool validateUser(const Client* client)const {
-		for (size_t i = 0; i < clients.getCount(); i++)
-		{
-			if (clients[i] == client) {
-				return true;
-			}
-		}
-		return false;
-	}
+	bool validateUser(const Client* client)const;
 
 	int getLeastBusyWorker()const;
 
-	int getTaskSize()const {
-		return tasks.getCount();
-	}
+	void receiveTask(const Task& toDo);
 
-	void receiveTask(const Task& toDo) {
-		tasks.push_back(toDo);
-	}
+	BankWorker* getEmployeeByIndex(int index)const;
 
-	BankWorker* getEmployeeByIndex(int index)const {
-		return employees[index];
-	}
+	void sendAnswerToClient(const Message& message, Client* client);
 
-	void sendAnswerToClient(const Message& message, Client* client) {
-		client->addMessage(message);
-	
-	}
+	const Client* getClient(const Client* client)const;
 
-	const String& getClientName(const Client* client)const {
-		return client->getOwner();
-	}
-
-	const String& getClientUCN(const Client* client)const {
-		return client->getUCN();
-	}
-
-	unsigned getClientAge(const Client* client)const {
-		return client->getAge();
-	}
-
-	Client* getClientByAccNum(const String& accNum) {
-		for (size_t i = 0; i < clients.getCount(); i++)
-		{
-			if (clients[i]->getAccountNumber() == accNum) {
-				return clients[i];
-			}
-		}
-		return nullptr;
-	}
-
+	int getTaskSize()const;
+	Client* getClientByAccNum(const String& accountNumber)const;
 	Bank(const Bank& other) = delete;
 	Bank& operator=(const Bank& other) = delete;
-	~Bank();
+	~Bank()=default;
 };

@@ -18,36 +18,15 @@ private:
 	Vector<Bank*> banks;
 	Vector<Client*>clients;
 
-	Bank* getBankByName(const String& bankName)const {
-		for (size_t i = 0; i < banks.getCount(); i++)
-		{
-			if (banks[i]->getName() == bankName) {
-				return banks[i];
-			}
-		}
-		return nullptr;
-	}
-
-	Client* getClientByUCN(const String& UCN) {
-		for (size_t i = 0; i < clients.getCount(); i++)
-		{
-			if (clients[i]->getUCN() == UCN) {
-				return clients[i];
-			}
-		}
-		return nullptr;
-	}
+	Bank* getBankByName(const String& bankName)const;
+	Client* getClientByUCN(const String& UCN)const;
 
 public:
-	OtherFirmWorker(const String& name, const String& UCN, unsigned age, const UserRoles& role) :Account("", UCN, age, name, role) {}
+	OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
 
-	void send_check(double sum, const String& verificationCode, const String& BankName, const String& UCN) {
-		Check check(verificationCode, sum);
-		Bank* getBank = getBankByName(BankName);
-		Client* getClient = getClientByUCN(UCN);
-		Message message(getOwner(), "You have a check assigned to you from: ", getBank->getName(), verificationCode);
-		getClient->addMessage(message);
-		getClient->sendCheck(check);
-	}
+	void send_check(const String& sum, const String& verificationCode, const String& BankName, const String& UCN);
 
+	virtual void exit()override; //TODO!!!!!!!!!!!!!!!!!
+	virtual void whoami()const override;
+	virtual void help()const override;
 };
