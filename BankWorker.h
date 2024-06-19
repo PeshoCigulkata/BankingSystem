@@ -27,6 +27,10 @@ private:
 public:
 	BankWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
 
+	void setBank(Bank* bank) {
+		this->bank = bank;
+	}
+
 	void addTask(Task* task);
 
 	void showTasks() const;

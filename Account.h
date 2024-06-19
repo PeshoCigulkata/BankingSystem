@@ -24,6 +24,7 @@ public:
 	Account() = default;
 	Account(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
 
+	const String& getPassword()const;
 	const String& getFirstName()const;
 	const String& getLastName()const;
 	const String& getBalance()const;

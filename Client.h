@@ -18,6 +18,10 @@ public:
 
 	}
 
+	void addBank(Bank* bank) {
+		banks.push_back(bank);
+	}
+
 	void check_avl(const String& bank_name, const String& account_number)const;
 
 	void open(const String& bank_name);

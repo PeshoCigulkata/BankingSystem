@@ -19,7 +19,7 @@ const String& RoleToString(UserRoles userRoles) {
 }
 
 
-OtherFirmWorker::OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role) :Account("", UCN, age, name, role) {}
+OtherFirmWorker::OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role) :Account(_firstName,_lastName, _UCN, _age, accNum, role) {}
 
 Bank* OtherFirmWorker::getBankByName(const String & bankName)const {
 	for (size_t i = 0; i < banks.getCount(); i++)

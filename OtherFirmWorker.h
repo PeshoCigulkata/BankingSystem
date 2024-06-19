@@ -26,6 +26,10 @@ public:
 
 	void send_check(const String& sum, const String& verificationCode, const String& BankName, const String& UCN);
 
+	void setBank(Bank* bank) {
+		banks.push_back(bank);
+	}
+
 	virtual void exit()override; //TODO!!!!!!!!!!!!!!!!!
 	virtual void whoami()const override;
 	virtual void help()const override;

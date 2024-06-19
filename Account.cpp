@@ -1,5 +1,9 @@
 #include "Account.h"
 
+const String& Account::getPassword() const
+{
+	return password;
+}
 const String& Account::getFirstName() const
 {
 	return firstName;
