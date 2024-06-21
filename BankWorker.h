@@ -4,17 +4,9 @@
 #include "Vector.hpp"
 #include "Bank.h"
 
-
-
-//User successfuly validated!
-		// funckiq WANTS TO APPROVE, v konzolata pishem string i sravnqvame s "true" i "false"
-		//if(approved){
-		//-- send Message che e uspeshno
-		//}else{
-		//send message che ne e approved
-		//}
-
-// GRESHNI KONSTRUKTORI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+class Account;
+class Bank;
+class Task;
 
 
 class BankWorker : public Account {
@@ -25,11 +17,9 @@ private:
 	Task* getTaskByIndex(unsigned idx)const;
 
 public:
-	BankWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
+	BankWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& password,  const String& role);
 
-	void setBank(Bank* bank) {
-		this->bank = bank;
-	}
+	void setBank(Bank* bank);
 
 	void addTask(Task* task);
 
@@ -45,7 +35,7 @@ public:
 
 	int getTasksSize()const;
 
-	virtual void exit()override; //TODO!!!!!!!!!!!!!!!!!
-	virtual void whoami()const override;
-	virtual void help()const override;
+	virtual void exit() const override; //TODO!!!!!!!!!!!!!!!!!
+	virtual void whoami() const override;
+	virtual void help() const override;
 };

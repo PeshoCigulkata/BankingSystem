@@ -35,7 +35,8 @@ int main() {
 				std::cin >> password;
 				system.signup(firstName, lastName, UCN, age, _role, password, "No bank");
 
-			}if (_role == UserRoles::BankWorker) {
+			}
+			else if (_role == UserRoles::BankWorker) {
 				std::cout << "Enter bank name: " << std::endl;
 				String bankName = "";
 				std::cin >> bankName;
@@ -44,11 +45,18 @@ int main() {
 				std::cin >> password;
 				system.signup(firstName, lastName, UCN, age, _role, password, bankName);
 
-			}if (_role == UserRoles::OtherFirmWorker) {
+			}
+			else if (_role == UserRoles::OtherFirmWorker) {
+				std::cout << "Enter bank name: " << std::endl; 
+				String bankName = "";
+				std::cin >> bankName;
 				std::cout << "Enter password: " << std::endl;
 				String password = "";
 				std::cin >> password;
-				system.
+				system.signup(firstName, lastName, UCN, age, _role, password, bankName);
+			}
+			else {
+				throw std::runtime_error("Problem man...");
 			}
 		}
 	}

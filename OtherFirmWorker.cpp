@@ -19,7 +19,7 @@ const String& RoleToString(UserRoles userRoles) {
 }
 
 
-OtherFirmWorker::OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role) :Account(_firstName,_lastName, _UCN, _age, accNum, role) {}
+OtherFirmWorker::OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age,const String& password,  const String& role) :Account(_firstName,_lastName, _UCN, _age,password, role) {}
 
 Bank* OtherFirmWorker::getBankByName(const String & bankName)const {
 	for (size_t i = 0; i < banks.getCount(); i++)
@@ -54,12 +54,25 @@ void OtherFirmWorker::send_check(const String& sum, const String& verificationCo
 	getClient->receiveCheck(check);
 }
 
+void OtherFirmWorker::exit() const
+{
+	std::cout << "exited";
+}
+
 void OtherFirmWorker::whoami() const
 {
 	std::cout << "Name: " << getFirstName() << " " << getLastName() << std::endl;
-	std::cout << "Role: " << RoleToString(getRole()) << std::endl;
+	std::cout << "Role: " << getRole() << std::endl;
 	std::cout << "Age: " << getAge() << std::endl;
 	std::cout << "UCN: " << getUCN() << std::endl;
+}
+
+void OtherFirmWorker::exit()const {
+	std::cout << "Exited.";
+}
+
+void OtherFirmWorker::setBank(Bank* bank) {
+	banks.push_back(bank);
 }
 
 void OtherFirmWorker::help() const

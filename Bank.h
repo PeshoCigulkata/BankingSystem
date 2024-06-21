@@ -9,6 +9,11 @@
 
 
 //TODO: FIX CLIENTS!	
+class Account;
+class Message;
+class Client;
+class Task;
+class BankWorker;
 
 class Bank {
 private:
@@ -35,20 +40,15 @@ public:
 
 	void receiveTask(const Task& toDo);
 
-	int getClientsNumber()const {
-		return clients.getCount();
-	}
+	int getClientsNumber()const;
 
 	BankWorker* getEmployeeByIndex(int index)const;
 
-	void addWorker(Account* accoutOfWorker) {
-		accounts.push_back(accoutOfWorker);
-		BankWorker* worker = dynamic_cast<BankWorker*>(accoutOfWorker);
-		if (worker == nullptr) {
-			throw std::runtime_error("FAILED CASTING!");
-		}
-		employees.push_back(worker);
-	}
+	Client* getClientByIndex(int indx)const;
+
+	void printClientByIdx(unsigned index)const;   //prints the smetka of the client
+
+	void addWorker(Account* accoutOfWorker);
 
 	void addClient(Account* accountOfClient);
 

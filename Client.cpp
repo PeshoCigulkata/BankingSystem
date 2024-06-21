@@ -1,24 +1,7 @@
 #include "Client.h"
 #include "String.h"
 
-const String& RoleToString(UserRoles userRoles) {
-	String str = "";
-	switch (userRoles) {
-	case UserRoles::Client:
-		str = "Client";
-		break;
-	case UserRoles::BankWorker:
-		str = "BankWorker";
-		break;
-	case UserRoles::OtherFirmWorker:
-		str = "OtherFirmWorker";
-		break;
-	default:
-		str = "Unknown";
-		break;
-	}
-	return str;
-}
+
 
 unsigned getNumberLength(unsigned  n)
 {
@@ -52,6 +35,13 @@ String toString(unsigned number, String str) {
 	return str;
 }
 
+Client::Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& password,  const String& role) :Account(firstName, lastName, _UCN, _age, password, role) {
+
+}
+
+void Client::addBank(Bank* bank) {
+	banks.push_back(bank);
+}
 
 
 int Client::getBankIndex(const String& bankName) const {
@@ -76,7 +66,12 @@ Bank* Client::getBankByName(const String& name)const {
 	return nullptr;
 }
 
-Client::Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role) :Account(firstName, lastName, _UCN, _age, accNum, role) {}
+void Client::setAccountNumber(const String& _accountNumber)
+{
+	accountNumber = _accountNumber;
+}
+
+Client::Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& accNum, const String& role) :Account(firstName, lastName, _UCN, _age, accNum, role) {}
 
 void Client::check_avl(const String& bank_name, const String& account_number)const {
 	int index = getBankIndex(bank_name);
@@ -169,10 +164,10 @@ void Client::list(const String& bank_name) {
 
 	Bank* currentBank = banks[index];
 	bool hasAcc = false;
-	for (size_t i = 0; i < currentBank->getSize(); i++)
+	for (size_t i = 0; i < currentBank->getClientsNumber(); i++)
 	{
-		if (strcmp(getFirstName().c_str(), currentBank->get_account_by_index(i)->getFirstName().c_str()) && strcmp(getLastName().c_str(), currentBank->get_account_by_index(i)->getLastName().c_str())) {
-			currentBank->print_account_by_index(i);
+		if (strcmp(this->getFirstName().c_str(), currentBank->getClientByIndex(i)->getFirstName().c_str()) && strcmp(this->getLastName().c_str(), currentBank->getClientByIndex(i)->getLastName().c_str())) {
+			currentBank->printClientByIdx(i);
 			hasAcc = true;
 		}
 	}
@@ -203,15 +198,15 @@ void Client::addMessage(const Message& message) {
 }
 
 
-void Client::exit() { 
-	  
+void Client::exit()const {
+	std::cout << "exited";
 }
 
 void Client::whoami()const {
-	std::cout << "Name: " << getFirstName() << " " << getLastName() << std::endl;
-	std::cout << "Role: " << RoleToString(getRole()) << std::endl;
-	std::cout << "Age: " << getAge() << std::endl;
-	std::cout << "UCN: " << getUCN() << std::endl;
+	std::cout << "Name: " << this->getFirstName() << " " << this->getLastName() << std::endl;
+	std::cout << "Role: " <<this-> getRole() << std::endl;
+	std::cout << "Age: " << this->getAge() << std::endl;
+	std::cout << "UCN: " << this->getUCN() << std::endl;
 	/*PASSWORD COUT*/
 }
 
@@ -227,4 +222,8 @@ void Client::help()const {
 	std::cout << "-whoami " << std::endl;
 	std::cout << "-exit " << std::endl;
 
+}
+
+const String& Client::getAccountNumber()const {
+	return accountNumber;
 }

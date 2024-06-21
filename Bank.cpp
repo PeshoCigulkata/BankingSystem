@@ -45,7 +45,9 @@ void Bank::create_account(const String& balance, Client* client) {
 	int accNum = accounts.getCount() + 1;
 	String buff = "";
 	String account_number = toString(accNum, buff);
-	Client client(client->getFirstName(), client->getLastName(), client->getUCN(), client->getAge(), account_number, client->getRole());
+	//String password = client->getPassword();
+	Client client(client->getFirstName(), client->getLastName(), client->getUCN(), client->getAge(), client->getPassword(, client->getRole());
+	client->setAccountNumber(account_number);
 
 	clients.push_back(client);
 }
@@ -106,6 +108,29 @@ int Bank::getTaskSize() const
 	return tasks.getCount();
 }
 
+void Bank::addWorker(Account* accoutOfWorker) {
+	accounts.push_back(accoutOfWorker);
+	BankWorker* worker = dynamic_cast<BankWorker*>(accoutOfWorker);
+	if (worker == nullptr) {
+		throw std::runtime_error("FAILED CASTING!");
+	}
+	employees.push_back(worker);
+}
+
+int Bank::getClientsNumber()const {
+	return clients.getCount();
+}
+
+
 void Bank::sendAnswerToClient(const Message& message, Client* client) {
 	client->addMessage(message);
+}
+
+Client* Bank::getClientByIndex(int indx)const {
+	return clients[indx];
+}
+
+void Bank::printClientByIdx(unsigned index)const {
+	std::cout<<clients[index]->getPassword();
+	std::cout << index; //index is the account id!
 }

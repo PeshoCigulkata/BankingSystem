@@ -1,6 +1,6 @@
 #pragma once
 #include "String.h"
-
+#include "Client.h"
 
 enum class TaskType {
 	Open,
@@ -8,6 +8,7 @@ enum class TaskType {
 	Change
 };
 
+class Client;
 
 class Task {
 private:
@@ -17,57 +18,27 @@ private:
 	String nameBank = "Unknown";
 public:
 	Task() = default;
-	Task(TaskType type, Client* client) :type(type), client(client) {
-	
-	}
-	Task(TaskType type, Client* _client,const String& accountID) :type(type), client(_client) {
-		client->setAccountNumber(accountID);
-	}
-	Task(const TaskType& type, Client* _client, const String& accountNumber, const String& nameBank) {
-		this->type = type;
-		client = _client;
-		client->setAccountNumber(accountNumber);
-		
-	}
+	Task(TaskType type, Client* client);
+	Task(TaskType type, Client* _client, const String& accountID);
+	Task(const TaskType& type, Client* _client, const String& accountNumber, const String& nameBank);
 
-	const String& getBankName()const {
-		return nameBank;
-	}
+	const String& getBankName()const;
 
-	const String& getUCN()const {
-		return client->getUCN();
-	}
+	const String& getUCN()const;
 
-	unsigned getAge()const {
-		return client->getAge();
-	}
+	const String& getFirstName()const;
 
-	UserRoles getRole()const {
-		return client->getRole();
-	}
+	const String& getLastName()const;
 
-	TaskType getType() const {
-		return type;
-	}
+	unsigned getAge()const;
 
-	const String& getAccountNumber()const {
-		return client->getAccountNumber();
-	}
+	const String& getRole()const;
 
-	Client* getClient()const {
-		return client;
-	}
+	TaskType getType() const;
 
-	const String& getTypeName() const {
-		switch (type) {
-		case TaskType::Open:
-			return "Open";
-		case TaskType::Close:
-			return "Close";
-		case TaskType::Change:
-			return "Change";
-		default:
-			return "Unknown";
-		}
-	}
+	const String& getAccountNumber()const;
+
+	Client* getClient()const;
+
+	const String& getTypeName() const;
 };

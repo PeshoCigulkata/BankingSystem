@@ -13,6 +13,10 @@ enum class UserRoles {
 
 };
 
+class Bank;
+class Client;
+class Account; 
+
 class OtherFirmWorker : public Account {
 private:
 	Vector<Bank*> banks;
@@ -22,15 +26,13 @@ private:
 	Client* getClientByUCN(const String& UCN)const;
 
 public:
-	OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& accNum, const UserRoles& role);
+	OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age,const String& password, const String& role);
 
 	void send_check(const String& sum, const String& verificationCode, const String& BankName, const String& UCN);
 
-	void setBank(Bank* bank) {
-		banks.push_back(bank);
-	}
+	void setBank(Bank* bank);
 
-	virtual void exit()override; //TODO!!!!!!!!!!!!!!!!!
-	virtual void whoami()const override;
-	virtual void help()const override;
+	virtual void exit() const override; //TODO!!!!!!!!!!!!!!!!!
+	virtual void whoami() const override;
+	virtual void help() const override;
 };
