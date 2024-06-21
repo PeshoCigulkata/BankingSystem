@@ -35,6 +35,10 @@ public:
 
 	void receiveTask(const Task& toDo);
 
+	int getClientsNumber()const {
+		return clients.getCount();
+	}
+
 	BankWorker* getEmployeeByIndex(int index)const;
 
 	void addWorker(Account* accoutOfWorker) {

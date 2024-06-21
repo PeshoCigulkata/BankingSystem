@@ -203,8 +203,8 @@ void Client::addMessage(const Message& message) {
 }
 
 
-void Client::exit() {
-	//TODO
+void Client::exit() { 
+	  
 }
 
 void Client::whoami()const {

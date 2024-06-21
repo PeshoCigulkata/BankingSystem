@@ -84,6 +84,8 @@ private:                                    //The static variables indicate the 
 
 		return nullptr;
 	}
+	Client* getLogged;
+
 public:
 	void login(const String& firstName, const String& lastName, const String& password) {
 		if (currentUser != nullptr) {
@@ -115,8 +117,13 @@ public:
 		if (role == UserRoles::Client) {
 			Bank* bank = getBankByName(bankName);
 			Account* User = new Client(firstName, lastName, UCN, age, password, role);
+			String str = "";
+			Client currentClient(firstName, lastName, UCN, age, toString(bank->getClientsNumber(),str), role);
+			Client* ptr = &currentClient;
+			clients.push_back(ptr);
 			bank->addClient(User);
 			dynamic_cast<Client*>(User)->addBank(bank);
+			//currentUser = User;
 			//currentUsers.push_back(currentUser);
 		}
 		else if (role == UserRoles::BankWorker) {
@@ -140,7 +147,20 @@ public:
 		banks.push_back(bank);
 	}
 
-
+	void exit() {
+		if (currentUser->getRole() == UserRoles::Client) {
+			dynamic_cast<Client*>(currentUser)->exit();
+			currentUser = nullptr;
+		}
+		else if (currentUser->getRole() == UserRoles::BankWorker) {
+			dynamic_cast<BankWorker*>(currentUser)->exit();
+			currentUser = nullptr;
+		}
+		else if (currentUser->getRole() == UserRoles::OtherFirmWorker) {
+			dynamic_cast<OtherFirmWorker*>(currentUser)->exit();
+			currentUser = nullptr;
+		}
+	}
 };
 
 

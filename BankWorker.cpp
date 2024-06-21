@@ -128,7 +128,7 @@ void BankWorker::approveTask(int task_id) {
 	if (bank->validateUser(currentTask->getClient())) {
 		if (currentTask->getType() == TaskType::Open) {
 			String str;
-			Message message(getFirstName() + " " + getLastName(), "You have opened an account in: ", bank->getName(), ". Your account ID is: " + toString(bank->getSize(), str));
+			Message message(getFirstName() + " " + getLastName(), "You have opened an account in: ", bank->getName(), ". Your account ID is: " + toString(bank->getClientsNumber(), str));
 			bank->sendAnswerToClient(message, currentTask->getClient());
 
 			bank->create_account("0", currentTask->getClient());
@@ -146,7 +146,7 @@ void BankWorker::approveTask(int task_id) {
 			String str;
 			Message message(getFirstName() + " " + getLastName(), "You have successfuly changed to: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
-			bank->create_account(/*balance*/, currentTask->getClient());     //TODO!!!!!!!!!!!!!!1
+			bank->create_account("0", currentTask->getClient());     // "0", because the account was just created so its empty until the user sends money.
 			tasks.remove(task_id);
 		}
 	}
@@ -189,7 +189,7 @@ bool BankWorker::validate(int task_id) {
 	String BankName = currentTask->getBankName();
 	Bank* oldBank = currentClient->getBankByName(BankName);
 
-	if (currentTask->getClient() == oldBank->getClient(currentClient) && currentTask->getUCN() == oldBank->getClientUCN(currentClient) && currentTask->getAge() == oldBank->getClientAge(currentClient)) {
+	if (currentTask->getClient() == oldBank->getClient(currentClient) && currentTask->getUCN() == oldBank->getClient(currentClient)->getUCN() && currentTask->getAge() == oldBank->getClient(currentClient)->getAge()) {
 
 		return true;
 	}
