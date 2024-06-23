@@ -27,12 +27,30 @@ char getCharFromDigit(int digit)
 String toString(unsigned number, String str) {
 	unsigned length = getNumberLength(number);
 	for (int i = length - 1; i >= 0; i--) {
-		str += getCharFromDigit(number % 10);
+		str[i] += getCharFromDigit(number % 10);
 	}
 
 	return str;
 }
 
+int Bank::getTaskIndex(const Task& toFind)const {
+	for (int i = 0; i < tasks.getCount(); i++)
+	{
+		if (tasks[i].getType() == toFind.getType()&&tasks[i].getClient()==toFind.getClient()&&tasks[i].getBankName()==toFind.getBankName()) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+ Task* Bank::getTaskByIdx(int idx) {
+	return &tasks[idx];
+}
+
+const String& Bank::getClientsNumber()const {
+	//String str = "";
+	return toString(clients.getCount(), str);
+}
 
 
 Bank::Bank(String _name) :name(_name) {}
@@ -46,10 +64,10 @@ void Bank::create_account(const String& balance, Client* client) {
 	String buff = "";
 	String account_number = toString(accNum, buff);
 	//String password = client->getPassword();
-	Client client(client->getFirstName(), client->getLastName(), client->getUCN(), client->getAge(), client->getPassword(, client->getRole());
-	client->setAccountNumber(account_number);
+	Client* _client=new Client(client->getFirstName(), client->getLastName(), client->getUCN(), client->getAge(), client->getPassword(), client->getRole());
+	_client->setAccountNumber(account_number);
 
-	clients.push_back(client);
+	clients.push_back(_client);
 }
 
 void Bank::close_account(const String& account_number) {
@@ -63,7 +81,7 @@ void Bank::close_account(const String& account_number) {
 
 int Bank::getLeastBusyWorker()const {
 	int index = 0;
-	int employeesCount = employees.getCount();
+	size_t employeesCount = employees.getCount();
 
 	int leastTasks = employees[0]->getTasksSize();  //Start of the search
 	for (size_t i = 0; i < employeesCount; i++)
@@ -86,16 +104,17 @@ bool Bank::validateUser(const Client* client)const {
 	return false;
 }
 
-const Client* Bank::getClient(const Client* client)const {
+ Client* Bank::getClient(const Client* client)const {
 	for (size_t i = 0; i < clients.getCount(); i++)
 	{
-		if (clients[i] == client) {
+		if (clients[i]->getFirstName() == client->getFirstName()&&clients[i]->getLastName()==client->getLastName()&&clients[i]->getPassword()==client->getPassword()) {
 			return clients[i];
 		}
 	}
+	
 }
 
-void Bank::receiveTask(const Task& toDo) {
+void Bank::receiveTask(const Task toDo) {
 	tasks.push_back(toDo);
 }
 
@@ -108,17 +127,12 @@ int Bank::getTaskSize() const
 	return tasks.getCount();
 }
 
-void Bank::addWorker(Account* accoutOfWorker) {
-	accounts.push_back(accoutOfWorker);
-	BankWorker* worker = dynamic_cast<BankWorker*>(accoutOfWorker);
-	if (worker == nullptr) {
-		throw std::runtime_error("FAILED CASTING!");
-	}
-	employees.push_back(worker);
+void Bank::addWorker(BankWorker* accountOfWorker) {
+	employees.push_back(accountOfWorker);
 }
 
-int Bank::getClientsNumber()const {
-	return clients.getCount();
+void Bank::addClient(Client* accountOfClient) {
+	clients.push_back(accountOfClient);
 }
 
 
@@ -126,11 +140,22 @@ void Bank::sendAnswerToClient(const Message& message, Client* client) {
 	client->addMessage(message);
 }
 
-Client* Bank::getClientByIndex(int indx)const {
+ Client* Bank::getClientByAccNum(const String& accountNumber)const {
+	for (size_t i = 0; i < clients.getCount(); i++)
+	{
+		if (clients[i]->getAccountNumber() == accountNumber) {
+			return clients[i];
+		}
+	}
+	return nullptr;
+}
+
+const Client* Bank::getClientByIndex(int indx)const {
 	return clients[indx];
 }
 
 void Bank::printClientByIdx(unsigned index)const {
-	std::cout<<clients[index]->getPassword();
-	std::cout << index; //index is the account id!
+	std::cout <<"Password is: "<< clients[index]->getPassword()<<std::endl;
+	std::cout << "Accout ID is: " << index << std::endl; //index is the account id!
 }
+

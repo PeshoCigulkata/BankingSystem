@@ -1,179 +1,263 @@
 #pragma once
-#include <iostream>
 
-template<typename T>
-class Vector {
-private:
-	static constexpr size_t min_cap = 16;
-	static constexpr size_t growth = 2;
-	size_t capacity = min_cap;
-	size_t count = 0;
-	T* data = nullptr;
-	void free();
+#include <iostream>
+namespace
+{
+	const size_t DEFAULT_CAP = 8;
+}
+template <typename T>
+class Vector
+{
+	T* data;
+	size_t size = 0;
+	size_t capacity = DEFAULT_CAP;
+
 	void copyFrom(const Vector<T>& other);
+	void free();
 	void moveFrom(Vector<T>&& other);
 	void resize(size_t newCap);
-	Vector(size_t startCapacity);
+
 public:
 	Vector();
 	Vector(const Vector<T>& other);
 	Vector(Vector<T>&& other);
 	Vector<T>& operator=(const Vector<T>& other);
 	Vector<T>& operator=(Vector<T>&& other);
-	~Vector();
-	void push_back(const T& elem);
-	void push_back(T&& elem);
-	void insert(size_t at, const T& elem);
-	void insert(size_t at, T&& elem);
-	void remove(size_t at);
-	const T& operator[](size_t at) const;
-	T& operator[](size_t at);
+	~Vector<T>();
+
 	size_t getCount() const;
 	size_t getCapacity() const;
+
+	void push_back(const T& _data);
+	void push_back(T&& _data);
+	void pop_back();
+	void insert(const T& _data, unsigned idx);
+	void insert(T&& _data, unsigned idx);
+	void remove(unsigned idx);
+	void clear();
+
+	bool empty() const;
+	T& operator[](const size_t idx);
+	const T& operator[](const size_t idx) const;
+
 };
-template<typename T>
-void Vector<T>::free() {
-	delete[] data;
-	data = nullptr;
-}
-template<typename T>
-void Vector<T>::copyFrom(const Vector<T>& other) {
+template <typename T>
+void Vector<T>::copyFrom(const Vector<T>& other)
+{
+	size = other.size;
 	capacity = other.capacity;
-	count = other.count;
 	data = new T[capacity];
-	for (size_t i = 0; i < count; ++i) {
+	for (int i = 0; i < size; i++) {
 		data[i] = other.data[i];
 	}
 }
-template<typename T>
-void Vector<T>::moveFrom(Vector<T>&& other) {
+
+template <typename T>
+void Vector<T>::free()
+{
+	delete[] data;
+	data = nullptr;
+	capacity = size = 0;
+}
+
+template <typename T>
+void Vector<T>::moveFrom(Vector<T>&& other)
+{
+	size = other.size;
 	capacity = other.capacity;
-	count = other.count;
 	data = other.data;
 	other.data = nullptr;
-	other.count = 0;
-	other.capacity = 0;
+	other.capacity = other.size = 0;
 }
-template<typename T>
-void Vector<T>::resize(size_t newCap) {
-	T* tmp = new T[newCap];
-	for (size_t i = 0; i < count; ++i) {
-		tmp[i] = std::move(data[i]);
+
+template <typename T>
+void Vector<T>::resize(size_t newCap)
+{
+	capacity = newCap;
+	T* temp = new T[newCap];
+	for (int i = 0; i < size; i++) {
+		temp[i] = std::move(data[i]);
 	}
 	delete[] data;
-	data = tmp;
-	capacity = newCap;
+	data = temp;
 }
-template<typename T>
-Vector<T>::Vector(size_t startCapacity) {
-	capacity = std::max(startCapacity, min_cap);
-	data = new T[capacity];
-	count = 0;
+
+template <typename T>
+Vector<T>::Vector()
+{
+	data = nullptr;
+	size = capacity = 0;
 }
-template<typename T>
-Vector<T>::Vector() : Vector(0) {}
-template<typename T>
-Vector<T>::Vector(const Vector<T>& other) {
+
+template <typename T>
+Vector<T>::Vector(const Vector<T>& other)
+{
 	copyFrom(other);
 }
-template<typename T>
-Vector<T>::Vector(Vector<T>&& other) {
+
+template <typename T>
+Vector<T>::Vector(Vector<T>&& other)
+{
 	moveFrom(std::move(other));
 }
-template<typename T>
-Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
-	if (this != &other) {
+
+template <typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& other)
+{
+	if (this != &other)
+	{
 		free();
 		copyFrom(other);
 	}
 	return *this;
 }
-template<typename T>
-Vector<T>& Vector<T>::operator=(Vector<T>&& other) {
-	if (this != &other) {
+
+template <typename T>
+Vector<T>& Vector<T>::operator=(Vector<T>&& other)
+{
+	if (this != &other)
+	{
 		free();
 		moveFrom(std::move(other));
 	}
 	return *this;
 }
-template<typename T>
-Vector<T>::~Vector() {
+
+template <typename T>
+Vector<T>::~Vector<T>()
+{
 	free();
 }
+
+
 template <typename T>
-void Vector<T>::push_back(const T& elem) {
-	if (count >= capacity) {
-		resize(capacity * growth);
+size_t Vector<T>::getCount() const
+{
+	return size;
+}
+
+template <typename T>
+size_t Vector<T>::getCapacity() const
+{
+	return capacity;
+}
+
+
+template <typename T>
+void Vector<T>::push_back(const T& _data)
+{
+	if (capacity == 0) {
+		resize(DEFAULT_CAP);
 	}
-	data[count++] = elem;
+	if (size == capacity) {
+		resize(2 * capacity);
+	}
+	data[size++] = _data;
+}
+
+template <typename T>
+void Vector<T>::push_back(T&& _data)
+{
+	if (capacity == 0) {
+		resize(DEFAULT_CAP);
+	}
+	if (size == capacity) {
+		resize(2 * capacity);
+	}
+	data[size++] = std::move(_data);
+}
+
+template <typename T>
+void Vector<T>::pop_back()
+{
+	if (empty()) {
+		throw std::exception("Empty vector");
+	}
+
+	size--;
+}
+
+template <typename T>
+void Vector<T>::insert(const T& _data, unsigned idx)
+{
+	if (idx >= size) {
+		throw std::out_of_range("Index out of range");
+	}
+
+	if (size == capacity) {
+		resize(2 * capacity);
+	}
+
+	size++;
+	for (int i = size - 1; i > idx; i--) {
+		data[i] = std::move(data[i - 1]);
+	}
+	data[idx] = _data;
+}
+
+template <typename T>
+void Vector<T>::insert(T&& _data, unsigned idx)
+{
+	if (idx >= size) {
+		throw std::out_of_range("Index out of range");
+	}
+
+	if (size == capacity) {
+		resize(2 * capacity);
+	}
+
+	size++;
+	for (int i = size - 1; i > idx; i--) {
+		data[i] = std::move(data[i - 1]);
+	}
+	data[idx] = std::move(_data);
 }
 template <typename T>
-void Vector<T>::push_back(T&& elem) {
-	if (count >= capacity) {
-		resize(capacity * growth);
+void Vector<T>::remove(unsigned idx)
+{
+	if (idx >= size) {
+		throw std::out_of_range("Index out of range");
 	}
-	data[count++] = std::move(elem);
-}
-template<typename T>
-void Vector<T>::insert(size_t at, const T& elem) {
-	if (at > count) {
-		throw std::out_of_range("Vector::Insert index bigger than count");
-	}
-	if (count >= capacity) {
-		resize(capacity * 2);
-	}
-	for (int i = (int)count - 1; i >= (int)at; --i) {
-		data[i + 1] = std::move(data[i]);
-	}
-	data[at] = elem;
-	++count;
-}
-template<typename T>
-void Vector<T>::insert(size_t at, T&& elem) {
-	if (at > count) {
-		throw std::out_of_range("Vector::Insert index bigger than count");
-	}
-	if (count >= capacity) {
-		resize(capacity * 2);
-	}
-	for (int i = (int)count - 1; i >= (int)at; --i) {
-		data[i + 1] = std::move(data[i]);
-	}
-	data[at] = std::move(elem);
-	++count;
-}
-template<typename T>
-void Vector<T>::remove(size_t at) {
-	if (at >= count) {
-		throw std::out_of_range("Vector::Not a valid index");
-	}
-	for (size_t i = at; i < count - 1; ++i) {
+
+	for (int i = idx; i < size - 1; i++) {
 		data[i] = std::move(data[i + 1]);
 	}
-	--count;
-	if (count <= capacity / (growth * growth)) {
-		resize(std::max(capacity / growth, min_cap));
+	size--;
+	if (size == capacity / 4) {
+		resize(capacity / 2);
 	}
 }
+
 template <typename T>
-const T& Vector<T>::operator[](size_t at) const {
-	if (at >= count) {
-		throw std::out_of_range("Vector::Not a valid index");
-	}
-	return data[at];
+void Vector<T>::clear()
+{
+	delete[] data;
+	size = 0;
+	capacity = DEFAULT_CAP;
+	data = new T[capacity];
 }
+
+
 template <typename T>
-T& Vector<T>::operator[](size_t at) {
-	if (at >= count) {
-		throw std::out_of_range("Vector::Not a valid index");
+bool Vector<T>::empty() const
+{
+	return size == 0;
+}
+
+template <typename T>
+T& Vector<T>::operator[](const size_t idx)
+{
+	if (idx >= size) {
+		throw std::out_of_range("Index out of range");
 	}
-	return data[at];
+	return data[idx];
 }
-template<typename T>
-size_t Vector<T>::getCount() const {
-	return count;
-}
-template<typename T>
-size_t Vector<T>::getCapacity() const {
-	return capacity;
+
+template <typename T>
+const T& Vector<T>::operator[](const size_t idx) const
+{
+	if (idx >= size) {
+		throw std::out_of_range("Index out of range");
+	}
+	return data[idx];
 }

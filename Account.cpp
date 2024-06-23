@@ -14,7 +14,7 @@ const String& Account::getLastName() const
 	return lastName;
 }
 
-const String& Account::getBalance()const {
+ const String& Account::getBalance()const {
 	return balance;
 }
 

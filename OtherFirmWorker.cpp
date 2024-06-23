@@ -1,27 +1,27 @@
 #include "OtherFirmWorker.h"
-const String& RoleToString(UserRoles userRoles) {
-	String str = "";
-	switch (userRoles) {
-	case UserRoles::Client:
-		str = "Client";
-		break;
-	case UserRoles::BankWorker:
-		str = "BankWorker";
-		break;
-	case UserRoles::OtherFirmWorker:
-		str = "OtherFirmWorker";
-		break;
-	default:
-		str = "Unknown";
-		break;
-	}
-	return str;
-}
+//const String& RoleToString(UserRoles userRoles) {
+//	String str = "";
+//	switch (userRoles) {
+//	case UserRoles::Client:
+//		str = "Client";
+//		break;
+//	case UserRoles::BankWorker:
+//		str = "BankWorker";
+//		break;
+//	case UserRoles::OtherFirmWorker:
+//		str = "OtherFirmWorker";
+//		break;
+//	default:
+//		str = "Unknown";
+//		break;
+//	}
+//	return str;
+//}
 
 
-OtherFirmWorker::OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age,const String& password,  const String& role) :Account(_firstName,_lastName, _UCN, _age,password, role) {}
+OtherFirmWorker::OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& password, const String& role) :Account(_firstName, _lastName, _UCN, _age, password, role) {}
 
-Bank* OtherFirmWorker::getBankByName(const String & bankName)const {
+Bank* OtherFirmWorker::getBankByName(const String& bankName)const {
 	for (size_t i = 0; i < banks.getCount(); i++)
 	{
 		if (banks[i]->getName() == bankName) {
@@ -41,22 +41,23 @@ Client* OtherFirmWorker::getClientByUCN(const String& UCN)const {
 	return nullptr;
 }
 
-void OtherFirmWorker::send_check(const String& sum, const String& verificationCode, const String& BankName, const String& UCN) {
-	if (sum < "0") {
-		throw std::exception("Invalid sum!");
-	}
+bool OtherFirmWorker::validateSum(const String& sum) {
+	return sum[0] == '-' || sum[0] == '0';
 
+}
+
+void OtherFirmWorker::addBank( Bank* bank) 
+{
+	banks[banks.getCount()] = bank;
+}
+
+void OtherFirmWorker::send_check(const String& sum, const String& verificationCode, const String& BankName, const String& UCN) {
 	Check check(verificationCode, sum);
 	Bank* getBank = getBankByName(BankName);
 	Client* getClient = getClientByUCN(UCN);
-	Message message(getFirstName()+getLastName(), "You have a check assigned to you ", getBank->getName(), verificationCode);
+	Message message(getFirstName() + getLastName(), "You have a check assigned to you ", getBank->getName(), verificationCode);
 	getClient->addMessage(message);
 	getClient->receiveCheck(check);
-}
-
-void OtherFirmWorker::exit() const
-{
-	std::cout << "exited";
 }
 
 void OtherFirmWorker::whoami() const

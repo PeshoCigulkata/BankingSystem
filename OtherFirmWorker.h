@@ -5,17 +5,10 @@
 #include "Check.h"
 #include "Bank.h"
 
-enum class UserRoles {
-	Client,
-	BankWorker,
-	OtherFirmWorker,
-	undefined
-
-};
-
+class Account;
 class Bank;
 class Client;
-class Account; 
+ 
 
 class OtherFirmWorker : public Account {
 private:
@@ -26,10 +19,12 @@ private:
 	Client* getClientByUCN(const String& UCN)const;
 
 public:
+	OtherFirmWorker() = default;
 	OtherFirmWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age,const String& password, const String& role);
 
+	void addBank( Bank* bank);
 	void send_check(const String& sum, const String& verificationCode, const String& BankName, const String& UCN);
-
+	bool validateSum(const String& sum);
 	void setBank(Bank* bank);
 
 	virtual void exit() const override; //TODO!!!!!!!!!!!!!!!!!

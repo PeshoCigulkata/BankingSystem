@@ -1,3 +1,4 @@
+
 #include "String.h"
 #include <cstring>
 #pragma warning(disable:4996)

@@ -1,6 +1,6 @@
 #pragma once
 #include "String.h"
-#include "Login.h"
+//#include "Login.h"
 //enum class UserRoles {
 //	Client,
 //	BankWorker,
@@ -9,14 +9,14 @@
 //
 //};
 
-class Account: public Login {
+class Account {
 protected:
 	String firstName="";
 	String lastName="";
 	String UCN="";      //Unique Citizenship Number
 	unsigned age=0;
 	//String accountNumber="";
-	String balance="";
+	String balance="0";
 	String password = "";     // <---- //TODO:
 
 	String role = "";
@@ -28,7 +28,7 @@ public:
 	const String& getPassword()const;
 	const String& getFirstName()const;
 	const String& getLastName()const;
-	const String& getBalance()const;
+	 const String& getBalance()const;
 	//const String& getAccountNumber()const;
 	const String& getUCN()const;
 	unsigned getAge()const;

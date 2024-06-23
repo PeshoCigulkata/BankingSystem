@@ -12,11 +12,12 @@ class Task;
 class BankWorker : public Account {
 private:
 	Vector<Task*> tasks;
-	Bank* bank;
+	Bank* bank=nullptr;
 
 	Task* getTaskByIndex(unsigned idx)const;
 
 public:
+	BankWorker() = default;
 	BankWorker(const String& _firstName, const String& _lastName, const String& _UCN, unsigned _age, const String& password,  const String& role);
 
 	void setBank(Bank* bank);

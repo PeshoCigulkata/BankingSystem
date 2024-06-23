@@ -1,6 +1,5 @@
 #include "Login.h"
-
-unsigned getNumberLength(unsigned  n)
+unsigned _getNumberLength(unsigned  n)
 {
 
 	if (n == 0)
@@ -15,48 +14,54 @@ unsigned getNumberLength(unsigned  n)
 	return res;
 }
 
-char getCharFromDigit(int digit)
+ char _getCharFromDigit(int digit)
 {
 	if (digit < 0 || digit > 9)
 		return '\0';
 
-	return digit + '0';
+	return digit + ' 0';
 }
 
-String toString(unsigned number, String str) {
-	unsigned length = getNumberLength(number);
-	for (int i = length - 1; i >= 0; i--) {
-		str += getCharFromDigit(number % 10);
+String _toString(int number, String& str) {
+	if (number == 0) {
+		str = "0";
 	}
-
+	int length = _getNumberLength(number);
+	for (int i = length - 1; i >= 0; i--) {
+		str[i] = _getCharFromDigit(number % 10);
+	}
+	str[str.length()] = '\0';
 	return str;
 }
 
-const String& Login::getRole(const String& firstName, const String& lastName, const String& password) {
+void Login::getRole(const String& firstName, const String& lastName, const String& password, String& role) {
 	for (size_t i = 0; i < clients.getCount(); i++)
 	{
-		if (clients[i]->getFirstName() == firstName && clients[i]->getLastName() == lastName && clients[i]->getPassword() == password) {
+		if (clients[i].getFirstName() == firstName && clients[i].getLastName() == lastName && clients[i].getPassword() == password) {
 			isClient = true;
 			index = i;
-			return "Client";
+			role = "Client";
+			return;
 		}
 	}
 
 	for (size_t i = 0; i < bankWorkers.getCount(); i++)
 	{
-		if (bankWorkers[i]->getFirstName() == firstName && bankWorkers[i]->getLastName() == lastName && bankWorkers[i]->getPassword() == password) {
+		if (bankWorkers[i].getFirstName() == firstName && bankWorkers[i].getLastName() == lastName && bankWorkers[i].getPassword() == password) {
 			isBankWorker = true;
 			index = i;
-			return "BankWorker";
+			role = "BankWorker";
+			return;
 		}
 	}
 
 	for (size_t i = 0; i < otherFirmWorker.getCount(); i++)
 	{
-		if (otherFirmWorker[i]->getFirstName() == firstName && otherFirmWorker[i]->getLastName() == lastName && otherFirmWorker[i]->getPassword() == password) {
+		if (otherFirmWorker[i].getFirstName() == firstName && otherFirmWorker[i].getLastName() == lastName && otherFirmWorker[i].getPassword() == password) {
 			isOtherFirmWorker = true;
 			index = i;
-			return "OtherFirmWorker";
+			role = "OtherFirmWorker";
+			return;
 		}
 	}
 
@@ -65,24 +70,24 @@ const String& Login::getRole(const String& firstName, const String& lastName, co
 
 void Login::getInfoOfExistingUser(String& balance, String& accountID, String& UCN, unsigned& age) {
 	if (isClient == true) {
-		balance = clients[index]->getBalance();
-		accountID = clients[index]->getAccountNumber();
-		UCN = clients[index]->getUCN();
-		age = clients[index]->getAge();
+		balance = clients[index].getBalance();
+		accountID = clients[index].getAccountNumber();
+		UCN = clients[index].getUCN();
+		age = clients[index].getAge();
 	}
 	else if (isBankWorker == true) {
 
-		balance = bankWorkers[index]->getBalance();
+		balance = bankWorkers[index].getBalance();
 		//accountID = bankWorkers[index]->getAccountNumber();
-		UCN = bankWorkers[index]->getUCN();
-		age = bankWorkers[index]->getAge();
+		UCN = bankWorkers[index].getUCN();
+		age = bankWorkers[index].getAge();
 
 	}
 	else if (isOtherFirmWorker == true) {
-		balance = otherFirmWorker[index]->getBalance();
+		balance = otherFirmWorker[index].getBalance();
 		//accountID = otherFirmWorker[index]->getAccountNumber();
-		UCN = otherFirmWorker[index]->getUCN();
-		age = otherFirmWorker[index]->getAge();
+		UCN = otherFirmWorker[index].getUCN();
+		age = otherFirmWorker[index].getAge();
 	}
 
 }
@@ -103,7 +108,8 @@ void Login::login(const String& firstName, const String& lastName, const String&
 		throw std::exception("One person can be logged!");
 	}
 
-	String roleOfLogger = getRole(firstName, lastName, password);
+	String roleOfLogger = "";
+	getRole(firstName, lastName, password, roleOfLogger);
 
 	String balance = "";
 	String accountID = "";
@@ -127,30 +133,25 @@ void Login::login(const String& firstName, const String& lastName, const String&
 
 void Login::signup(const String& firstName, const String& lastName, const String& UCN, unsigned age, const String& role, const String& password, const String& bankName) {
 	if (role == "Client") {
-		Bank* bank = getBankByName(bankName);
-		Account* User = new Client(firstName, lastName, UCN, age, password, role);
-		String str = "";
-		Client currentClient(firstName, lastName, UCN, age, toString(bank->getClientsNumber(), str), role);
-		Client* ptr = &currentClient;
-		clients.push_back(ptr);
-		bank->addClient(User);
-		dynamic_cast<Client*>(User)->addBank(bank);
-		//currentUser = User;
-		//currentUsers.push_back(currentUser);
+		clients.push_back(Client(firstName, lastName, UCN, age, password, role));
+		index = clients.getCount()-1;
+		clients[index].setAccountNumber(_toString(index,str));
+		getBankByName(bankName)->addClient(&clients[index]);
+		clients[clients.getCount() - 1].addBank(getBankByName(bankName));
+
 	}
 	else if (role == "BankWorker") {
-		Bank* bank = getBankByName(bankName);
-		Account* user = new BankWorker(firstName, lastName, UCN, age, password, role);
-		bank->addWorker(user);
-		dynamic_cast<BankWorker*>(user)->setBank(bank);
-		//	currentUsers.push_back(currentUser);
+		bankWorkers.push_back(BankWorker(firstName, lastName, UCN, age, password, role));
+		index = bankWorkers.getCount() - 1;
+		//bankWorkers[index].setAccountNumber(_toString(index, str));
+		getBankByName(bankName)->addWorker(&bankWorkers[index]);
+		//bankWorkers[bankWorkers.getCount() - 1].addBank(getBankByName(bankName));
 	}
 	else if (role == "OtherFirmWorker") {
-		Bank* bank = getBankByName(bankName);
-		Account* _user = new OtherFirmWorker(firstName, lastName, UCN, age, password, role);
-		bank->addOtherFirmWorker(_user);
-		dynamic_cast<OtherFirmWorker*>(_user)->setBank(bank);
-		//	currentUsers.push_back(currentUser);
+		otherFirmWorker.push_back(OtherFirmWorker(firstName, lastName, UCN, age, password, role));
+		index = otherFirmWorker.getCount() - 1;
+		getBankByName(bankName)->addClient(&clients[index]);
+		otherFirmWorker[otherFirmWorker.getCount() - 1].addBank(getBankByName(bankName));
 	}
 }
 void Login::create_bank(const String& bankName) {
@@ -158,8 +159,65 @@ void Login::create_bank(const String& bankName) {
 	banks.push_back(bank);
 }
 
+void Login::userWhoami() const
+{
+	currentUser->whoami();
+}
+
+void Login::userHelp() const
+{
+	currentUser->help();
+}
+
+void Login::checkUser_avl(const String& bankName, const String& accNum) const
+{
+	if (isClient == true) {
+		clients[index].check_avl(bankName, accNum);
+	}
+	else {
+		throw std::exception("Its not a client.");
+	}
+}
+
+void Login::userOpen(const String& bankName)
+{
+	if (isClient == true) {
+		clients[index].open(bankName);
+	}
+	else {
+		throw std::exception("Its not a client.");
+	}
+}
+
+void Login::userCLose(const String& bankName, const String& accountNumber)
+{
+	if (isClient == true) {
+		clients[index].close(bankName, accountNumber);
+	}
+	else {
+		throw std::exception("Its not a client.");
+	}
+}
+
+void Login::userChange(const String& newBank, const String& currentBank, const String& accountNumber)
+{
+	if (isClient == true) {
+		clients[index].change(newBank, currentBank,accountNumber);
+	}
+	else {
+		throw std::exception("Its not a client.");
+	}
+}
+
+void Login::userList(const String& bankName) 
+{
+	if (isClient == true) {
+		clients[index].list(bankName);
+	}
+}
+
 void Login::exit() {
-	if (currentUser->getRole() == "Client") {
+	/*if (currentUser->getRole() == "Client") {
 		dynamic_cast<Client*>(currentUser)->exit();
 		currentUser = nullptr;
 	}
@@ -170,5 +228,8 @@ void Login::exit() {
 	else if (currentUser->getRole() == "OtherFirmWorker") {
 		dynamic_cast<OtherFirmWorker*>(currentUser)->exit();
 		currentUser = nullptr;
+	}*/
+	if (isClient == true) {
+		clients[index].exit();
 	}
 }

@@ -3,39 +3,64 @@
 
 
 
-unsigned getNumberLength(unsigned  n)
-{
+//unsigned _getNumberLength(unsigned  n)
+//{
+//
+//	if (n == 0)
+//		return 1;
+//	unsigned int res = 0;
+//
+//	while (n != 0)
+//	{
+//		res++;
+//		n /= 10;
+//	}
+//	return res;
+//}
+//
+//char _getCharFromDigit(int digit)
+//{
+//	if (digit < 0 || digit > 9)
+//		return '\0';
+//
+//	return digit + '0';
+//}
+//
+//String _toString(unsigned number, String str) {
+//	unsigned length = _getNumberLength(number);
+//	for (int i = length - 1; i >= 0; i--) {
+//		str += _getCharFromDigit(number % 10);
+//	}
+//
+//	return str;
+//}
 
-	if (n == 0)
-		return 1;
-	unsigned int res = 0;
+bool isDigit(char ch) {
+	return ch >= '0' && ch <= '9';
+}
 
-	while (n != 0)
+unsigned getDigit(char ch) {
+	return ch - '0';
+}
+
+size_t CharToDigit(const String& str) {
+	size_t length = str.length();
+	unsigned Number = 0;
+	unsigned multiplier = 1;
+	for (size_t i = 0; i < length; i++)
 	{
-		res++;
-		n /= 10;
-	}
-	return res;
-}
-
-char getCharFromDigit(int digit)
-{
-	if (digit < 0 || digit > 9)
-		return '\0';
-
-	return digit + '0';
-}
-
-String toString(unsigned number, String str) {
-	unsigned length = getNumberLength(number);
-	for (int i = length - 1; i >= 0; i--) {
-		str += getCharFromDigit(number % 10);
+		if (isDigit(str[i])) {
+			Number += getDigit(str[i]) * multiplier;
+			multiplier *= 10;
+		}
 	}
 
-	return str;
+	return Number;
 }
 
-Client::Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& password,  const String& role) :Account(firstName, lastName, _UCN, _age, password, role) {
+
+
+Client::Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& password, const String& role) :Account(firstName, lastName, _UCN, _age, password, role) {
 
 }
 
@@ -71,8 +96,6 @@ void Client::setAccountNumber(const String& _accountNumber)
 	accountNumber = _accountNumber;
 }
 
-Client::Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& accNum, const String& role) :Account(firstName, lastName, _UCN, _age, accNum, role) {}
-
 void Client::check_avl(const String& bank_name, const String& account_number)const {
 	int index = getBankIndex(bank_name);
 	if (index == -1) {
@@ -90,7 +113,7 @@ void Client::open(const String& bank_name) {
 
 	Bank* currentBank = banks[index];  // We have the current bank.
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
-	Task currentTask(TaskType::Open, this);
+	Task currentTask("Open", this);
 	currentBank->receiveTask(currentTask);
 
 	int idx = currentBank->getTaskSize() - 1;
@@ -105,7 +128,7 @@ void Client::close(const String& bank_name, const String& account_number) {
 
 	Bank* currentBank = banks[index];
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
-	Task currentTask(TaskType::Close, this, account_number);
+	Task currentTask("Close", this, account_number);
 	currentBank->receiveTask(currentTask);
 
 	int idx = currentBank->getTaskSize() - 1;        //from potential fixes! without it it can cause problems
@@ -144,16 +167,19 @@ void Client::change(const String& new_bank, const String& this_bank, const Strin
 	int indexCurrent = getBankIndex(this_bank);
 	int indexNew = getBankIndex(new_bank);
 	if (indexCurrent == -1 || indexNew == -1) {
-		throw std::exception("Incorrect bank names!");
+		throw std::exception("Incorrect bank names! ");
 	}
 
 	Bank* currentBank = banks[indexCurrent];
 	int employeeIndexWithLeastTasks = currentBank->getLeastBusyWorker();
-	Task currentTask(TaskType::Change, this, account_number);
-	currentBank->receiveTask(currentTask);
+	Task currentTask("Change", this, account_number);
+	banks[indexCurrent]->receiveTask(currentTask);
+	int indexOfCurrentTask=banks[indexCurrent]->getTaskIndex(currentTask);
+	//banks[indexCurrent]->getTaskSize();
+	//currentBank->receiveTask(currentTask);
 
-	int idx = currentBank->getTaskSize() - 1;
-	currentBank->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(&currentTask);
+	int idx = banks[indexCurrent]->getTaskSize() - 1;
+	banks[indexCurrent]->getEmployeeByIndex(employeeIndexWithLeastTasks)->addTask(banks[indexCurrent]->getTaskByIdx(indexOfCurrentTask));
 }
 
 void Client::list(const String& bank_name) {
@@ -164,9 +190,9 @@ void Client::list(const String& bank_name) {
 
 	Bank* currentBank = banks[index];
 	bool hasAcc = false;
-	for (size_t i = 0; i < currentBank->getClientsNumber(); i++)
+	for (size_t i = 0; i <= CharToDigit(currentBank->getClientsNumber()); i++)
 	{
-		if (strcmp(this->getFirstName().c_str(), currentBank->getClientByIndex(i)->getFirstName().c_str()) && strcmp(this->getLastName().c_str(), currentBank->getClientByIndex(i)->getLastName().c_str())) {
+		if ((getFirstName()==currentBank->getClientByIndex(i)->getFirstName()) && (getLastName()==currentBank->getClientByIndex(i)->getLastName())) {
 			currentBank->printClientByIdx(i);
 			hasAcc = true;
 		}
@@ -204,7 +230,7 @@ void Client::exit()const {
 
 void Client::whoami()const {
 	std::cout << "Name: " << this->getFirstName() << " " << this->getLastName() << std::endl;
-	std::cout << "Role: " <<this-> getRole() << std::endl;
+	std::cout << "Role: " << this->getRole() << std::endl;
 	std::cout << "Age: " << this->getAge() << std::endl;
 	std::cout << "UCN: " << this->getUCN() << std::endl;
 	/*PASSWORD COUT*/

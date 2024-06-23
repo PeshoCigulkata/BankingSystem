@@ -1,74 +1,74 @@
 #include "BankWorker.h"
+//
+//unsigned getNumberLength(unsigned  n)
+//{
+//
+//	if (n == 0)
+//		return 1;
+//	unsigned int res = 0;
+//
+//	while (n != 0)
+//	{
+//		res++;
+//		n /= 10;
+//	}
+//	return res;
+//}
+//
+//char getCharFromDigit(int digit)
+//{
+//	if (digit < 0 || digit > 9)
+//		return '\0';
+//
+//	return digit + '0';
+//}
+//
+//String toString(unsigned number, String str) {
+//	unsigned length = getNumberLength(number);
+//	for (int i = length - 1; i >= 0; i--) {
+//		str += getCharFromDigit(number % 10);
+//	}
+//
+//	return str;
+//}
 
-unsigned getNumberLength(unsigned  n)
-{
-
-	if (n == 0)
-		return 1;
-	unsigned int res = 0;
-
-	while (n != 0)
-	{
-		res++;
-		n /= 10;
-	}
-	return res;
-}
-
-char getCharFromDigit(int digit)
-{
-	if (digit < 0 || digit > 9)
-		return '\0';
-
-	return digit + '0';
-}
-
-String toString(unsigned number, String str) {
-	unsigned length = getNumberLength(number);
-	for (int i = length - 1; i >= 0; i--) {
-		str += getCharFromDigit(number % 10);
-	}
-
-	return str;
-}
-
-const String& TypeToString(TaskType type) {
-	String str = "";
-	switch (type) {
-	case TaskType::Open:
-		str = "Open";
-		break;
-	case TaskType::Close:
-		str = "Close";
-		break;
-	case TaskType::Change:
-		str = "Change";
-		break;
-	default:
-		str = "Unknown";
-		break;
-	}
-	return str;
-}
-
-const String& RoleToString(UserRoles userRoles) {
-	String str = "";
-	switch (userRoles) {
-	case UserRoles::Client:
-		str = "Client";
-		break;
-	case UserRoles::BankWorker:
-		str = "BankWorker";
-		break;
-	case UserRoles::OtherFirmWorker:
-		str = "OtherFirmWorker";
-		break;
-	default:
-		str = "Unknown";
-		break;
-	}
-	return str;
-}
+//const String& TypeToString(TaskType type) {
+//	String str = "";
+//	switch (type) {
+//	case TaskType::Open:
+//		str = "Open";
+//		break;
+//	case TaskType::Close:
+//		str = "Close";
+//		break;
+//	case TaskType::Change:
+//		str = "Change";
+//		break;
+//	default:
+//		str = "Unknown";
+//		break;
+//	}
+//	return str;
+//}
+//
+//const String& RoleToString(UserRoles userRoles) {
+//	String str = "";
+//	switch (userRoles) {
+//	case UserRoles::Client:
+//		str = "Client";
+//		break;
+//	case UserRoles::BankWorker:
+//		str = "BankWorker";
+//		break;
+//	case UserRoles::OtherFirmWorker:
+//		str = "OtherFirmWorker";
+//		break;
+//	default:
+//		str = "Unknown";
+//		break;
+//	}
+//	return str;
+//}
 
 void BankWorker::setBank(Bank* bank) {
 	this->bank = bank;
@@ -117,14 +117,14 @@ void BankWorker::addTask(Task* task) {
 
 void BankWorker::showTasks() const {
 	for (size_t i = 0; i < tasks.getCount(); ++i) {
-		std::cout << "[" << i << "]" << " " << tasks[i]->getTypeName();
+		std::cout << "[" << i << "]" << " " << tasks[i]->getType();
 		std::cout << " Name: " << tasks[i]->getFirstName() << " " << tasks[i]->getLastName() << std::endl;
 	}
 }
 
 void BankWorker::viewTask(int task_id)const {
 	std::cout << "Task ID: " << tasks[task_id]->getAccountNumber() << std::endl;
-	std::cout << "Type: " << tasks[task_id]->getTypeName() << std::endl;
+	std::cout << "Type: " << tasks[task_id]->getType() << std::endl;
 	std::cout << "Client: " << tasks[task_id]->getFirstName() << " " << tasks[task_id]->getLastName() << std::endl;
 	std::cout << "Age: " << tasks[task_id]->getAge() << std::endl;
 	std::cout << "UCN: " << tasks[task_id]->getUCN() << std::endl;
@@ -134,15 +134,15 @@ void BankWorker::approveTask(int task_id) {
 	Task* currentTask = getTaskByIndex(task_id);
 
 	if (bank->validateUser(currentTask->getClient())) {
-		if (currentTask->getType() == TaskType::Open) {
+		if (currentTask->getType() == "Open") {
 			String str;
-			Message message(this->getFirstName() + " " + this->getLastName(), "You have opened an account in: ", bank->getName(), ". Your account ID is: " + toString(bank->getClientsNumber(), str));
+			Message message(this->getFirstName() + " " + this->getLastName(), "You have opened an account in: ", bank->getName(), ". Your account ID is: " + bank->getClientsNumber());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 
 			bank->create_account("0", currentTask->getClient());
 			tasks.remove(task_id);
 		}
-		else if (currentTask->getType() == TaskType::Close) {
+		else if (currentTask->getType() == "Close") {
 			String str;
 			Message message(this->getFirstName() + " " + this->getLastName(), "You have closed an account in: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
@@ -150,7 +150,7 @@ void BankWorker::approveTask(int task_id) {
 			bank->close_account(currentTask->getAccountNumber());
 			tasks.remove(task_id);
 		}
-		else if (currentTask->getType() == TaskType::Change) {
+		else if (currentTask->getType() == "Change") {
 			String str;
 			Message message(this->getFirstName() + " " + this->getLastName(), "You have successfuly changed to: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
@@ -167,17 +167,17 @@ void BankWorker::disapproveTask(int task_id, const Message message) {
 	Task* currentTask = getTaskByIndex(task_id);
 
 	if (bank->validateUser(currentTask->getClient())) {
-		if (currentTask->getType() == TaskType::Open) {
+		if (currentTask->getType() == "Open") {
 			Message message(this->getFirstName(), "Your request is denied: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 			tasks.remove(task_id);
 		}
-		else if (currentTask->getType() == TaskType::Close) {
+		else if (currentTask->getType() == "Close") {
 			Message message(getFirstName(), "Your request is denied: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 			tasks.remove(task_id);
 		}
-		else if (currentTask->getType() == TaskType::Change /*&& hasApproved()*/) {
+		else if (currentTask->getType() == "Change" /*&& hasApproved()*/) {
 			String str;
 			Message message(this->getFirstName(), "Your request is denied: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());

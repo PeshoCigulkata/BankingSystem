@@ -45,4 +45,4 @@ bool operator>(const String& lhs, const String& rhs);
 bool operator==(const String& lhs, const String& rhs);
 bool operator!=(const String& lhs, const String& rhs);
 
-unsigned getNextPowerOfTwo(unsigned n); 
+unsigned getNextPowerOfTwo(unsigned n);

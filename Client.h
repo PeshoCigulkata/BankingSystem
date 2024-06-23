@@ -19,6 +19,7 @@ private:
 	String accountNumber = "";
 public:
 	//Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& accNum,  const String& role);
+	Client() = default;
 	Client(const String& firstName, const String& lastName, const String& _UCN, unsigned _age, const String& password,  const String& role);
 
 	void addBank(Bank* bank);

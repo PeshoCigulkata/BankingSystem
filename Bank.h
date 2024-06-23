@@ -15,6 +15,9 @@ class Client;
 class Task;
 class BankWorker;
 
+
+static String str="";
+
 class Bank {
 private:
 	String name = "";       // name of the bank
@@ -25,6 +28,7 @@ private:
 	Vector<BankWorker*> employees;
 	Vector<Client*> clients;
 
+	
 public:
 	Bank() = default;
 	Bank(String n);
@@ -38,29 +42,33 @@ public:
 
 	int getLeastBusyWorker()const;
 
-	void receiveTask(const Task& toDo);
+	void receiveTask(const Task toDo);
 
-	int getClientsNumber()const;
+	int getTaskIndex(const Task& toFind)const;
+
+	 Task* getTaskByIdx(int idx);
 
 	BankWorker* getEmployeeByIndex(int index)const;
 
-	Client* getClientByIndex(int indx)const;
+	const Client* getClientByIndex(int indx)const;
 
 	void printClientByIdx(unsigned index)const;   //prints the smetka of the client
 
-	void addWorker(Account* accoutOfWorker);
+	void addWorker(BankWorker* accoutOfWorker);
 
-	void addClient(Account* accountOfClient);
+	void addClient(Client* accountOfClient);
 
-	void addOtherFirmWorker(Account* accountOfOtherFirmWorker);
+	//void addOtherFirmWorker(Account* accountOfOtherFirmWorker);
 
 	void sendAnswerToClient(const Message& message, Client* client);
 
-	const Client* getClient(const Client* client)const;
+	 Client* getClient(const Client* client)const;
 
 	int getTaskSize()const;
-	Client* getClientByAccNum(const String& accountNumber)const;
-	Bank(const Bank& other) = delete;
-	Bank& operator=(const Bank& other) = delete;
+
+	const String& getClientsNumber()const;
+
+	 Client* getClientByAccNum(const String& accountNumber)const;
+
 	~Bank() = default;
 };

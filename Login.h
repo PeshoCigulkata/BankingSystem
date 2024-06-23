@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector.hpp"
-#include "String.h"
+//#include "String.h"
 #include "Bank.h"
 #include "OtherFirmWorker.h"
 #include "Account.h"
@@ -14,10 +14,10 @@ class Bank;
 
 class Login {
 private:                                    //The static variables indicate the users we have at the moment!, CurrentUsers is live based pointers and in case of exiting the program we make the pointer of hte user in there nullPTR
-	static Vector<Client*> clients;
-	static Vector<BankWorker*> bankWorkers;
-	static Vector<OtherFirmWorker*> otherFirmWorker;
-	static Vector<Bank> banks;
+	Vector<Client> clients;
+	Vector<BankWorker> bankWorkers;
+	Vector<OtherFirmWorker> otherFirmWorker;
+	Vector<Bank> banks;
 
 	int index = -1;
 	Account* currentUser = nullptr;
@@ -25,20 +25,64 @@ private:                                    //The static variables indicate the 
 	bool isBankWorker = false;
 	bool isOtherFirmWorker = false;
 
-	const String& getRole(const String& firstName, const String& lastName, const String& password);
+	void getRole(const String& firstName, const String& lastName, const String& password,String& role);
 
 	void getInfoOfExistingUser(String& balance, String& accountID, String& UCN, unsigned& age);
 
 	Bank* getBankByName(const String& bankName);
 
 	//Client* getLogged;
-
+protected:
+	String str = "";
 public:
+	Login() = default;
 	void login(const String& firstName, const String& lastName, const String& password);
 
 	void signup(const String& firstName, const String& lastName, const String& UCN, unsigned age, const String& role, const String& password, const String& bankName);
 
 	void create_bank(const String& bankName);
+
+	void userWhoami()const;
+
+	void userHelp()const;
+
+	void checkUser_avl(const String& bankName,const String& accNum)const;
+
+	void userOpen(const String& bankName);
+
+	void userCLose(const String& bankName,const String& accountNumber);
+
+	void userChange(const String& neweBank,const String& currentBank,const String& accountNumber);
+
+	void userList(const String& bankName);
+
+	/*
+
+	void userRedeem()const;
+
+	void userList()const;
+
+	void userMessages()const;
+
+	void userTasks()const;
+
+	void userView(unsigned index)const;
+
+	void userApprove(unsigned index)const;
+
+	void userDisapprove()const;
+
+	void userValidate()const;
+
+	void userSendCheck()const;
+	
+	void userOpen()const;
+
+	void userChange()const;
+
+	void userClose()const;
+	
+	*/
 
 	void exit();
 };
