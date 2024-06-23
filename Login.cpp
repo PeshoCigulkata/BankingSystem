@@ -14,7 +14,7 @@ unsigned _getNumberLength(unsigned  n)
 	return res;
 }
 
- char _getCharFromDigit(int digit)
+char _getCharFromDigit(int digit)
 {
 	if (digit < 0 || digit > 9)
 		return '\0';
@@ -134,8 +134,8 @@ void Login::login(const String& firstName, const String& lastName, const String&
 void Login::signup(const String& firstName, const String& lastName, const String& UCN, unsigned age, const String& role, const String& password, const String& bankName) {
 	if (role == "Client") {
 		clients.push_back(Client(firstName, lastName, UCN, age, password, role));
-		index = clients.getCount()-1;
-		clients[index].setAccountNumber(_toString(index,str));
+		index = clients.getCount() - 1;
+		clients[index].setAccountNumber(_toString(index, str));
 		getBankByName(bankName)->addClient(&clients[index]);
 		clients[clients.getCount() - 1].addBank(getBankByName(bankName));
 
@@ -143,14 +143,11 @@ void Login::signup(const String& firstName, const String& lastName, const String
 	else if (role == "BankWorker") {
 		bankWorkers.push_back(BankWorker(firstName, lastName, UCN, age, password, role));
 		index = bankWorkers.getCount() - 1;
-		//bankWorkers[index].setAccountNumber(_toString(index, str));
 		getBankByName(bankName)->addWorker(&bankWorkers[index]);
-		//bankWorkers[bankWorkers.getCount() - 1].addBank(getBankByName(bankName));
 	}
 	else if (role == "OtherFirmWorker") {
 		otherFirmWorker.push_back(OtherFirmWorker(firstName, lastName, UCN, age, password, role));
 		index = otherFirmWorker.getCount() - 1;
-		getBankByName(bankName)->addClient(&clients[index]);
 		otherFirmWorker[otherFirmWorker.getCount() - 1].addBank(getBankByName(bankName));
 	}
 }
@@ -202,34 +199,111 @@ void Login::userCLose(const String& bankName, const String& accountNumber)
 void Login::userChange(const String& newBank, const String& currentBank, const String& accountNumber)
 {
 	if (isClient == true) {
-		clients[index].change(newBank, currentBank,accountNumber);
+		clients[index].change(newBank, currentBank, accountNumber);
 	}
 	else {
 		throw std::exception("Its not a client.");
 	}
 }
 
-void Login::userList(const String& bankName) 
+void Login::userList(const String& bankName)
 {
 	if (isClient == true) {
 		clients[index].list(bankName);
 	}
+	else {
+		throw std::exception("Its not a client.");
+	}
+}
+
+void Login::userRedeem(const String& bankName, const String& accountID, const String& verificationCode)
+{
+	if (isClient == true) {
+		clients[index].redeem(bankName, accountID, verificationCode);
+	}
+	else {
+		throw std::exception("Its not a client.");
+	}
+}
+
+void Login::userMessages() const
+{
+	if (isClient == true) {
+		clients[index].message();
+	}
+	else {
+		throw std::exception("Its not a client.");
+	}
+}
+
+void Login::userTasks() const
+{
+	if (isBankWorker == true) {
+		bankWorkers[index].showTasks();
+	}
+	else {
+		throw std::exception("Its not a bank worker. ");
+	}
+}
+
+void Login::userView(unsigned _index) const
+{
+	if (isBankWorker == true) {
+		bankWorkers[index].viewTask(_index);
+	}
+	else {
+		throw std::exception("Its not a bank worker. ");
+	}
+}
+
+void Login::userApprove(unsigned _index)
+{
+	if (isBankWorker == true) {
+		bankWorkers[index].approveTask(_index);
+	}
+	else {
+		throw std::exception("Its not a ban worker. ");
+	}
+}
+
+void Login::userDisapprove(unsigned _index, const Message& message)
+{
+	if (isBankWorker == true) {
+		bankWorkers[index].disapproveTask(_index, message);
+	}
+	else {
+		throw std::exception("Its not a ban worker. ");
+	}
+}
+
+void Login::userValidate(int index)
+{
+	if (isBankWorker == true) {
+		bankWorkers[index].validate(index);
+	}
+	else {
+		throw std::exception("Its not a ban worker. ");
+	}
+}
+
+void Login::userSendCheck(const String& sum, const String& verificationCode,const String& bankName, const String& UCN)
+{
+	if (isOtherFirmWorker == true) {
+		otherFirmWorker[index].send_check(sum, verificationCode,bankName,UCN);
+	}
+	else {
+		throw std::exception("Its not a ban worker. ");
+	}
 }
 
 void Login::exit() {
-	/*if (currentUser->getRole() == "Client") {
-		dynamic_cast<Client*>(currentUser)->exit();
-		currentUser = nullptr;
-	}
-	else if (currentUser->getRole() == "BankWorker") {
-		dynamic_cast<BankWorker*>(currentUser)->exit();
-		currentUser = nullptr;
-	}
-	else if (currentUser->getRole() == "OtherFirmWorker") {
-		dynamic_cast<OtherFirmWorker*>(currentUser)->exit();
-		currentUser = nullptr;
-	}*/
 	if (isClient == true) {
 		clients[index].exit();
+	}
+	else if (isBankWorker == true) {
+		bankWorkers[index].exit();
+	}
+	else if (isOtherFirmWorker == true) {
+		otherFirmWorker[index].exit();
 	}
 }

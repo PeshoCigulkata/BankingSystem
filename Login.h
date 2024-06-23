@@ -55,12 +55,8 @@ public:
 	void userChange(const String& neweBank,const String& currentBank,const String& accountNumber);
 
 	void userList(const String& bankName);
-
-	/*
-
-	void userRedeem()const;
-
-	void userList()const;
+	
+	void userRedeem(const String& bankName,const String& accountID,const String& verificationCode);
 
 	void userMessages()const;
 
@@ -68,21 +64,13 @@ public:
 
 	void userView(unsigned index)const;
 
-	void userApprove(unsigned index)const;
+	void userApprove(unsigned index);
 
-	void userDisapprove()const;
+	void userDisapprove(unsigned index,const Message& message);
 
-	void userValidate()const;
+	void userValidate(int index);
 
-	void userSendCheck()const;
-	
-	void userOpen()const;
-
-	void userChange()const;
-
-	void userClose()const;
-	
-	*/
+	void userSendCheck(const String& sum,const String& verificationCode, const String& bankName, const String& UCN);
 
 	void exit();
 };

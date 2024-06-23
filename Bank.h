@@ -5,6 +5,7 @@
 #include "Vector.hpp"
 #include "BankWorker.h"
 #include "Client.h"
+
 //bankata znae za svoite klienti i rabotnici
 
 
@@ -57,9 +58,7 @@ public:
 	void addWorker(BankWorker* accoutOfWorker);
 
 	void addClient(Client* accountOfClient);
-
-	//void addOtherFirmWorker(Account* accountOfOtherFirmWorker);
-
+	
 	void sendAnswerToClient(const Message& message, Client* client);
 
 	 Client* getClient(const Client* client)const;

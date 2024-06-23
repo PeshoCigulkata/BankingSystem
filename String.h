@@ -2,7 +2,6 @@
 #include <iostream>
 
 
-//Copied from Hristo's GitHub https://github.com/hrisge/Object_Oriented_Programming_Practicum_Course/blob/main/2023-2024/Week%2008/String/String.cpp
 class String
 {
     char* data;

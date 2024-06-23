@@ -116,6 +116,9 @@ void BankWorker::addTask(Task* task) {
 }
 
 void BankWorker::showTasks() const {
+	if (tasks.getCount() == 0) {
+		std::cout << "No tasks! :)";
+	}
 	for (size_t i = 0; i < tasks.getCount(); ++i) {
 		std::cout << "[" << i << "]" << " " << tasks[i]->getType();
 		std::cout << " Name: " << tasks[i]->getFirstName() << " " << tasks[i]->getLastName() << std::endl;
@@ -132,18 +135,16 @@ void BankWorker::viewTask(int task_id)const {
 
 void BankWorker::approveTask(int task_id) {
 	Task* currentTask = getTaskByIndex(task_id);
-
+	
 	if (bank->validateUser(currentTask->getClient())) {
 		if (currentTask->getType() == "Open") {
-			String str;
-			Message message(this->getFirstName() + " " + this->getLastName(), "You have opened an account in: ", bank->getName(), ". Your account ID is: " + bank->getClientsNumber());
+			Message message(this->getFirstName() + " " + this->getLastName(), "You have opened an account in: ", bank->getName(), bank->getClientsNumber());
 			bank->sendAnswerToClient(message, currentTask->getClient());
-
+			//bank->sendAnswerToClient(message, getTaskByIndex(task_id)->getClient());
 			bank->create_account("0", currentTask->getClient());
 			tasks.remove(task_id);
 		}
 		else if (currentTask->getType() == "Close") {
-			String str;
 			Message message(this->getFirstName() + " " + this->getLastName(), "You have closed an account in: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 
@@ -151,7 +152,6 @@ void BankWorker::approveTask(int task_id) {
 			tasks.remove(task_id);
 		}
 		else if (currentTask->getType() == "Change") {
-			String str;
 			Message message(this->getFirstName() + " " + this->getLastName(), "You have successfuly changed to: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 			bank->create_account("0", currentTask->getClient());     // "0", because the account was just created so its empty until the user sends money.
@@ -163,23 +163,23 @@ void BankWorker::approveTask(int task_id) {
 	}
 }
 
-void BankWorker::disapproveTask(int task_id, const Message message) {
+void BankWorker::disapproveTask(int task_id, const Message& message) {
 	Task* currentTask = getTaskByIndex(task_id);
 
 	if (bank->validateUser(currentTask->getClient())) {
 		if (currentTask->getType() == "Open") {
-			Message message(this->getFirstName(), "Your request is denied: ", bank->getName());
+			//Message message(this->getFirstName(), "Your request is denied: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 			tasks.remove(task_id);
 		}
 		else if (currentTask->getType() == "Close") {
-			Message message(getFirstName(), "Your request is denied: ", bank->getName());
+			//Message message(getFirstName(), "Your request is denied: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 			tasks.remove(task_id);
 		}
 		else if (currentTask->getType() == "Change" /*&& hasApproved()*/) {
 			String str;
-			Message message(this->getFirstName(), "Your request is denied: ", bank->getName());
+			//Message message(this->getFirstName(), "Your request is denied: ", bank->getName());
 			bank->sendAnswerToClient(message, currentTask->getClient());
 			tasks.remove(task_id);
 		}

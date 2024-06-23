@@ -30,7 +30,7 @@ public:
 
 	void approveTask(int task_id);
 
-	void disapproveTask(int task_id, const Message message);
+	void disapproveTask(int task_id, const Message& message);
 
 	bool validate(int task_id);
 

@@ -56,16 +56,3 @@ const String& Task::getAccountNumber()const {
 Client* Task::getClient()const {
 	return client;
 }
-
-//const String& Task::getTypeName() const {
-//	switch (type) {
-//	case TaskType::Open:
-//		return "Open";
-//	case TaskType::Close:
-//		return "Close";
-//	case TaskType::Change:
-//		return "Change";
-//	default:
-//		return "Unknown";
-//	}
-//}
